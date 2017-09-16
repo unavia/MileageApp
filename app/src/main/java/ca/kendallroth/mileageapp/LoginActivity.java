@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,9 +51,9 @@ public class LoginActivity extends AppCompatActivity {
     setContentView(R.layout.activity_login);
 
     // Set up the login form.
-    mEmailView = (TextView) findViewById(R.id.email);
+    mEmailView = (TextView) findViewById(R.id.login_email);
 
-    mPasswordView = (EditText) findViewById(R.id.password);
+    mPasswordView = (EditText) findViewById(R.id.login_password);
     // TODO: What is this?
     mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
       @Override
@@ -65,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
       }
     });
 
-    mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+    mEmailSignInButton = (Button) findViewById(R.id.login_button);
     mEmailSignInButton.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -74,7 +75,10 @@ public class LoginActivity extends AppCompatActivity {
     });
 
     mLoginFormView = findViewById(R.id.login_form);
-    mProgressView = findViewById(R.id.login_progress);
+    mProgressView  = findViewById(R.id.login_progress);
+
+    // Hide the Action bar (also on "Create Account")
+    getSupportActionBar().hide();
   }
 
   /**
@@ -99,13 +103,18 @@ public class LoginActivity extends AppCompatActivity {
     View focusView = null;
 
     // Check for a valid password, if the user entered one.
-    if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+    if (TextUtils.isEmpty(password)) {
+      mPasswordView.setError(getString(R.string.error_field_required));
+      focusView = mPasswordView;
+      cancel = true;
+    }
+    else if (!isPasswordValid(password)) {
       mPasswordView.setError(getString(R.string.error_invalid_password));
       focusView = mPasswordView;
       cancel = true;
     }
 
-    // Check for a valid email address.
+    // Check for a valid email address (is last to set focus properly).
     if (TextUtils.isEmpty(email)) {
       mEmailView.setError(getString(R.string.error_field_required));
       focusView = mEmailView;
@@ -117,12 +126,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     if (cancel) {
-      // There was an error; don't attempt login and focus the first
-      // form field with an error.
+      // There was an error; don't attempt login and focus the first form field with an error.
       focusView.requestFocus();
     } else {
-      // Show a progress spinner, and kick off a background task to
-      // perform the user login attempt.
+      // Show a progress spinner, and kick off a background task to perform the user login attempt.
       showProgress(true);
       mAuthTask = new UserLoginTask(email, password);
       mAuthTask.execute((Void) null);
@@ -176,8 +183,7 @@ public class LoginActivity extends AppCompatActivity {
   }
 
   /**
-   * Represents an asynchronous login/registration task used to authenticate
-   * the user.
+   * Represents an asynchronous login/registration task used to authenticate the user.
    */
   public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -208,7 +214,6 @@ public class LoginActivity extends AppCompatActivity {
         }
       }
 
-      // TODO: register the new account here.
       return true;
     }
 
