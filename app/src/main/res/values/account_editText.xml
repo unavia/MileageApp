@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="account_editText">
+        <item name="colorAccent">@color/account_primaryText</item> <!-- Selected field label/border -->
+        <item name="android:textColorHint">@color/account_secondaryText</item> <!-- Hint text  -->
+        <item name="android:textColorPrimary">@color/account_primaryText</item> <!-- Input text -->
+        <item name="android:colorControlNormal">@color/account_secondaryText</item> <!-- Underline (unfocused field) -->
+    </style>
+</resources>
