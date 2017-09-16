@@ -1,6 +1,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/primary"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -43,10 +44,12 @@
                 android:layout_gravity="center_horizontal" />
 
             <android.support.design.widget.TextInputLayout
+                android:id="@+id/login_email_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/account_editText"
-                android:layout_marginBottom="8dp">
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/account_errorText">
 
                 <!-- Email input -->
                 <AutoCompleteTextView
@@ -60,9 +63,12 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
+                android:id="@+id/login_password_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/account_editText">
+                android:theme="@style/account_editText"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/account_errorText">
 
                 <!-- Password input -->
                 <EditText

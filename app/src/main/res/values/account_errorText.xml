@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="account_errorText">
+        <item name="android:textColor">#CB4242</item>
+    </style>
+</resources>
