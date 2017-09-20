@@ -3,6 +3,7 @@ package ca.kendallroth.mileageapp;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,13 +39,14 @@ public class LoginActivity extends AppCompatActivity {
   /**
    * Keep track of the login task to ensure we can cancel it if requested.
    */
-  private UserLoginTask mAuthTask = null;
+  private LoginTask mAuthTask = null;
 
   // UI references.
+  private Button mCreateAccountButton;
+  private Button mLoginButton;
   private EditText mEmailView;
-  private TextInputLayout mEmailViewLayout;
-  private Button mEmailSignInButton;
   private EditText mPasswordView;
+  private TextInputLayout mEmailViewLayout;
   private TextInputLayout mPasswordViewLayout;
   private View mProgressView;
   private View mLoginFormView;
@@ -53,16 +56,17 @@ public class LoginActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_login);
 
-    // Set up the login form.
+    // Email input
     mEmailView = (EditText) findViewById(R.id.login_email);
     mEmailViewLayout = (TextInputLayout) findViewById(R.id.login_email_layout);
 
+    // Password input
     mPasswordView = (EditText) findViewById(R.id.login_password);
     mPasswordViewLayout = (TextInputLayout) findViewById(R.id.login_password_layout);
-    // TODO: What is this?
     mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
       @Override
       public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+        // Attempt login on <Enter> keypress while the Password field has focus
         if (id == R.id.login || id == EditorInfo.IME_NULL) {
           attemptLogin();
           return true;
@@ -71,18 +75,29 @@ public class LoginActivity extends AppCompatActivity {
       }
     });
 
-    mEmailSignInButton = (Button) findViewById(R.id.login_button);
-    mEmailSignInButton.setOnClickListener(new OnClickListener() {
+    // Login button
+    mLoginButton = (Button) findViewById(R.id.login_button);
+    mLoginButton.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
         attemptLogin();
       }
     });
 
+    // Create Account button
+    mCreateAccountButton = (Button) findViewById(R.id.create_account_button);
+    mCreateAccountButton.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        displayCreateAccountActivity();
+      }
+    });
+
+    // Form views
     mLoginFormView = findViewById(R.id.login_form);
     mProgressView  = findViewById(R.id.login_progress);
 
-    // Hide the Action bar (also on "Create Account")
+    // Hide the Action bar (on all "Authentication" activities)
     getSupportActionBar().hide();
   }
 
@@ -131,12 +146,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     if (cancel) {
-      // There was an error; don't attempt login and focus the first form field with an error.
+      // Ignore login attempt (due to error) and set focus to last field with error
       focusView.requestFocus();
     } else {
       // Show a progress spinner, and kick off a background task to perform the user login attempt.
       showProgress(true);
-      mAuthTask = new UserLoginTask(email, password);
+      mAuthTask = new LoginTask(email, password);
       mAuthTask.execute((Void) null);
     }
   }
@@ -188,14 +203,36 @@ public class LoginActivity extends AppCompatActivity {
   }
 
   /**
+   * Clear the inputs and errors
+   */
+  private void clearLoginInputs() {
+    mEmailView.setText("");
+    mEmailViewLayout.setError(null);
+
+    mPasswordView.setText("");
+    mPasswordViewLayout.setError(null);
+  }
+
+  /**
+   * Display the Create Account activity
+   */
+  private void displayCreateAccountActivity() {
+    // Clear inputs (for return)
+    clearLoginInputs();
+
+    Intent createAccount = new Intent(this, CreateAccountActivity.class);
+    startActivity(createAccount);
+  }
+
+  /**
    * Represents an asynchronous login/registration task used to authenticate the user.
    */
-  public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+  public class LoginTask extends AsyncTask<Void, Void, Boolean> {
 
     private final String mEmail;
     private final String mPassword;
 
-    UserLoginTask(String email, String password) {
+    LoginTask(String email, String password) {
       mEmail = email;
       mPassword = password;
     }

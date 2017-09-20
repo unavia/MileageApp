@@ -1,15 +1,30 @@
 <resources>
     <string name="app_name">MileageApp</string>
 
-    <!-- Login strings -->
-    <string name="button_create_account">No account? Create one</string>
+    <string name="button_create_account">Create Account</string>
     <string name="button_login">Login</string>
+
+    <string name="error_account_already_exists">An account with this email already exists</string>
     <string name="error_field_required">This field is required</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_name">This name is too short</string>
     <string name="error_invalid_password">This password is too short</string>
+    <string name="error_mismatching_passwords">These passwords do not match</string>
+
+    <string name="failure_create_account">Account creation failed</string>
     <string name="failure_login">Login failed</string>
+
     <string name="hint_email">Email</string>
+    <string name="hint_name">Name</string>
     <string name="hint_password">Password</string>
+    <string name="hint_password_confirm">Confirm Password</string>
+
+    <string name="success_create_account">Account created</string>
     <string name="success_login">Login succeeded</string>
+
+    <string name="progress_message_create_account">Creating Account</string>
+
+    <string name="prompt_create_account">No account? Create one</string>
+    <string name="prompt_login">Already have an account? Login</string>
 </resources>
