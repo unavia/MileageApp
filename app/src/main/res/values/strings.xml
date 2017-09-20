@@ -24,6 +24,7 @@
     <string name="success_login">Login succeeded</string>
 
     <string name="progress_message_create_account">Creating Account</string>
+    <string name="progress_message_login_attempt">Logging in</string>
 
     <string name="prompt_create_account">No account? Create one</string>
     <string name="prompt_login">Already have an account? Login</string>

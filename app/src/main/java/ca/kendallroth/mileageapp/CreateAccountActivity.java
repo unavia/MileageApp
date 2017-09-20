@@ -126,6 +126,24 @@ public class CreateAccountActivity extends AppCompatActivity {
 
 
   /**
+   * Clear the inputs and errors
+   */
+  private void clearLoginInputs() {
+    mEmailView.setText("");
+    mEmailViewLayout.setError(null);
+
+    mNameView.setText("");
+    mNameViewLayout.setError(null);
+
+    mPasswordView.setText("");
+    mPasswordViewLayout.setError(null);
+
+    mPasswordConfirmView.setText("");
+    mPasswordConfirmViewLayout.setError(null);
+  }
+
+
+  /**
    * Display the Login activity
    */
   private void displayLoginActivity() {

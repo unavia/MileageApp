@@ -3,6 +3,7 @@ package ca.kendallroth.mileageapp;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -48,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
   private EditText mPasswordView;
   private TextInputLayout mEmailViewLayout;
   private TextInputLayout mPasswordViewLayout;
-  private View mProgressView;
+  private ProgressDialog mProgressDialog;
   private View mLoginFormView;
 
   @Override
@@ -93,13 +94,17 @@ public class LoginActivity extends AppCompatActivity {
       }
     });
 
-    // Form views
+    // Progress dialog
+    mProgressDialog = new ProgressDialog(this);
+    mProgressDialog.setMessage(getString(R.string.progress_message_login_attempt));
+
+    // Layout views
     mLoginFormView = findViewById(R.id.login_form);
-    mProgressView  = findViewById(R.id.login_progress);
 
     // Hide the Action bar (on all "Authentication" activities)
     getSupportActionBar().hide();
   }
+
 
   /**
    * Attempts to sign in or register the account specified by the login form.
@@ -150,57 +155,32 @@ public class LoginActivity extends AppCompatActivity {
       focusView.requestFocus();
     } else {
       // Show a progress spinner, and kick off a background task to perform the user login attempt.
-      showProgress(true);
+      mProgressDialog.show();
       mAuthTask = new LoginTask(email, password);
       mAuthTask.execute((Void) null);
     }
   }
 
+  /**
+   * Validate the email
+   * @param email Email address
+   * @return Whether the email address is valid
+   */
   private boolean isEmailValid(String email) {
     //TODO: Replace with updated logic
     return email.contains("@") && email.contains(".");
   }
 
+  /**
+   * Validate the password
+   * @param password Password
+   * @return Whether the password is valid
+   */
   private boolean isPasswordValid(String password) {
     //TODO: Replace with updated logic
     return password.length() > 4;
   }
 
-  /**
-   * Shows the progress UI and hides the login form.
-   */
-  @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-  private void showProgress(final boolean isShown) {
-    // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-    // for very easy animations. If available, use these APIs to fade-in
-    // the progress spinner.
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-      int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-      mLoginFormView.setVisibility(isShown ? View.GONE : View.VISIBLE);
-      mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-          isShown ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-        @Override
-        public void onAnimationEnd(Animator animation) {
-          mLoginFormView.setVisibility(isShown ? View.GONE : View.VISIBLE);
-        }
-      });
-
-      mProgressView.setVisibility(isShown ? View.VISIBLE : View.GONE);
-      mProgressView.animate().setDuration(shortAnimTime).alpha(
-          isShown ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-        @Override
-        public void onAnimationEnd(Animator animation) {
-          mProgressView.setVisibility(isShown ? View.VISIBLE : View.GONE);
-        }
-      });
-    } else {
-      // The ViewPropertyAnimator APIs are not available, so simply show
-      // and hide the relevant UI components.
-      mProgressView.setVisibility(isShown ? View.VISIBLE : View.GONE);
-      mLoginFormView.setVisibility(isShown ? View.GONE : View.VISIBLE);
-    }
-  }
 
   /**
    * Clear the inputs and errors
@@ -262,10 +242,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onPostExecute(final Boolean success) {
       mAuthTask = null;
-      showProgress(false);
+      mProgressDialog.dismiss();
 
       if (success) {
-        // QUESTION: What is this?
+        // NOTE: Expand to redirect to app home page
+
         //finish();
       } else {
         mPasswordViewLayout.setError(getString(R.string.error_incorrect_password));
@@ -273,15 +254,18 @@ public class LoginActivity extends AppCompatActivity {
       }
 
       // Define a snackbar based on the operation status
-      CharSequence snackbarResource = success ? getString(R.string.success_login) : getString(R.string.failure_login);
-      Snackbar successSnackbar = Snackbar.make(mLoginFormView, snackbarResource, Snackbar.LENGTH_SHORT);
-      successSnackbar.show();
+      CharSequence snackbarResource = success
+          ? getString(R.string.success_login)
+          : getString(R.string.failure_login);
+      Snackbar resultSnackbar = Snackbar.make(mLoginFormView, snackbarResource, Snackbar.LENGTH_SHORT);
+      resultSnackbar.show();
     }
 
     @Override
     protected void onCancelled() {
+      // NOTE: Should logging in be canceallable?
       mAuthTask = null;
-      showProgress(false);
+      mProgressDialog.dismiss();
     }
   }
 }
