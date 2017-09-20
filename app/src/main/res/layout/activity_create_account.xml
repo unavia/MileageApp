@@ -11,15 +11,15 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="ca.kendallroth.mileageapp.LoginActivity">
+    tools:context="ca.kendallroth.mileageapp.CreateAccountActivity">
 
     <ScrollView
-        android:id="@+id/login_form"
+        android:id="@+id/create_account_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/login_form_layout"
+            android:id="@+id/create_account_form_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -33,27 +33,45 @@
                 android:layout_marginTop="24dp"
                 android:layout_gravity="center_horizontal" />
 
+            <!-- Name input -->
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/login_email_layout"
+                android:id="@+id/name_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/account_editText"
                 app:errorEnabled="true"
                 app:errorTextAppearance="@style/account_errorText">
 
-                <!-- Email input -->
-                <AutoCompleteTextView
-                    android:id="@+id/login_email"
+                <EditText
+                    android:id="@+id/name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_name"
+                    android:inputType="text"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
+
+            <!-- Email input -->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/email_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/account_editText"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/account_errorText">
+
+                <EditText
+                    android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_email"
                     android:inputType="textEmailAddress"
                     android:maxLines="1" />
-
             </android.support.design.widget.TextInputLayout>
 
+            <!-- Password input -->
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/login_password_layout"
+                android:id="@+id/password_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/account_editText"
@@ -62,46 +80,63 @@
                 app:passwordToggleEnabled="true"
                 app:passwordToggleTint="@color/account_secondaryText">
 
-                <!-- Password input -->
                 <EditText
-                    android:id="@+id/login_password"
+                    android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_password"
-                    android:imeActionId="@+id/login"
-                    android:imeActionLabel="@string/button_login"
-                    android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1" />
-
             </android.support.design.widget.TextInputLayout>
 
-            <!-- Login button -->
+            <!-- Password confirm input -->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/password_confirm_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/account_editText"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/account_errorText"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="@color/account_secondaryText">
+
+                <EditText
+                    android:id="@+id/password_confirm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_password_confirm"
+                    android:inputType="textPassword"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
+
+            <!-- Create Account button -->
             <Button
-                android:id="@+id/login_button"
+                android:id="@+id/create_account_button"
                 style="?android:textAppearanceSmall"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 android:layout_marginTop="24dp"
                 android:layout_width="match_parent"
                 android:background="@color/primaryDark"
-                android:text="@string/button_login"
+                android:text="@string/button_create_account"
                 android:textColor="@color/account_primaryText"
                 android:textStyle="bold"/>
 
-            <!-- Create account button -->
+            <!-- Login button -->
             <Button
-                android:id="@+id/create_account_button"
+                android:id="@+id/login_button"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_gravity="center_horizontal"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="@string/prompt_create_account"
+                android:text="@string/prompt_login"
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="@color/account_secondaryText"
                 />
 
         </LinearLayout>
+
     </ScrollView>
+
 </LinearLayout>
