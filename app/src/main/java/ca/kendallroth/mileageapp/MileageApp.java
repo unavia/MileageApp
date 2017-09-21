@@ -7,8 +7,6 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
-import java.io.File;
-
 /**
  * Custom Application class to handle checking for authentication file on app start.
  *   Taken from https://stackoverflow.com/questions/7360846/how-can-i-execute-something-just-once-per-application-start
@@ -47,7 +45,7 @@ public class MileageApp extends Application {
       // Add the initial user
       root.addElement("user")
           .addAttribute("email", "kendall@example.com")
-          .addAttribute("name", "Example")
+          .addAttribute("name", "Example User")
           .addAttribute("password", "hello");
 
       // Create the XML file
