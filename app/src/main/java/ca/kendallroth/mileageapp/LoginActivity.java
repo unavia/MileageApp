@@ -1,41 +1,31 @@
 package ca.kendallroth.mileageapp;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-
-import android.os.AsyncTask;
-
-import android.os.Build;
-import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Display;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.dom4j.Document;
+import org.dom4j.Node;
+
+import java.util.List;
+
 /**
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity {
-
-  /**
-   * A dummy authentication store containing known user names and passwords.
-   * TODO: remove after connecting to a real authentication system.
-   */
-  private static final String[] DUMMY_CREDENTIALS = new String[]{
-      "kendall@example.com:hello"
-  };
 
   /**
    * Keep track of the login task to ensure we can cancel it if requested.
@@ -228,15 +218,33 @@ public class LoginActivity extends AppCompatActivity {
         return false;
       }
 
-      for (String credential : DUMMY_CREDENTIALS) {
-        String[] pieces = credential.split(":");
-        if (pieces[0].equals(mEmail)) {
-          // Account exists, return true if the password matches.
-          return pieces[1].equals(mPassword);
+      Document document;
+
+      try {
+        // Read XML file with user information
+        document = XMLFileUtils.getFile(getBaseContext(), XMLFileUtils.USERS_FILE_NAME);
+
+        // Select all the "user" nodes in the document
+        List<Node> users = document.selectNodes("/users/user");
+
+        for (Node user : users) {
+          Log.d("MileageApp", String.format("Login attempt from '%s' with password '%s'", mEmail, mPassword));
+
+          // Compare the entered email and password against the "registered" accounts
+          if (user.valueOf("@email").equals(mEmail)) {
+            boolean validAuthAttempt = user.valueOf("@password").equals(mPassword);
+
+            Log.d("MileageApp.auth", String.format("Login attempt %s", validAuthAttempt ? "successful" : "failed"));
+
+            return validAuthAttempt;
+          }
         }
+      } catch (Exception e) {
+        // Return false (no match) if the file parsing fails or throws an exception
+        return false;
       }
 
-      return true;
+      return false;
     }
 
     @Override
