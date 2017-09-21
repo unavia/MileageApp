@@ -227,9 +227,9 @@ public class LoginActivity extends AppCompatActivity {
         // Select all the "user" nodes in the document
         List<Node> users = document.selectNodes("/users/user");
 
-        for (Node user : users) {
-          Log.d("MileageApp", String.format("Login attempt from '%s' with password '%s'", mEmail, mPassword));
+        Log.d("MileageApp", String.format("Login attempt from '%s' with password '%s'", mEmail, mPassword));
 
+        for (Node user : users) {
           // Compare the entered email and password against the "registered" accounts
           if (user.valueOf("@email").equals(mEmail)) {
             boolean validAuthAttempt = user.valueOf("@password").equals(mPassword);

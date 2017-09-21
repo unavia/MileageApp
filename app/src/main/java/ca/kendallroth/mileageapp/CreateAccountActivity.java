@@ -1,18 +1,24 @@
 package ca.kendallroth.mileageapp;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.Node;
+
+import java.util.List;
 
 public class CreateAccountActivity extends AppCompatActivity {
 
@@ -262,12 +268,43 @@ public class CreateAccountActivity extends AppCompatActivity {
         return false;
       }
 
-      // Deny account creation if account already "exists"
-      if (mEmail.equals("kendall@example.com")) {
+      try {
+        // Get the user file for modification (adding user)
+        Document usersFile = XMLFileUtils.getFile(getBaseContext(), XMLFileUtils.USERS_FILE_NAME);
+        Element rootElement = usersFile.getRootElement();
+
+        List<Node> users = usersFile.selectNodes("/users/user");
+        boolean isUniqueUser = true;
+
+        // Verify that the user does not already exist
+        for (Node user : users) {
+          if (user.valueOf("@email").equals(mEmail)) {
+            isUniqueUser = false;
+            break;
+          }
+        }
+
+        // TODO: This needs to be modified to return a proper error (if possible)
+        if (!isUniqueUser) {
+          return false;
+        }
+
+        // Add the new user to the document
+        //  NOTE: This only works because it is the root element - how else could it work?
+        rootElement.addElement("user")
+            .addAttribute("email", mEmail)
+            .addAttribute("name", mName)
+            .addAttribute("password", mPassword);
+
+        // Write the modified file back out
+        XMLFileUtils.createFile(getBaseContext(), XMLFileUtils.USERS_FILE_NAME, usersFile);
+
+        Log.d("MileageApp.auth", String.format("New user added: '%s', '%s', '%s'", mName, mEmail, mPassword));
+
+        return true;
+      } catch(Exception e) {
         return false;
       }
-
-      return true;
     }
 
     @Override
