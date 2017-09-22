@@ -254,6 +254,9 @@ public class LoginActivity extends AppCompatActivity {
 
       if (success) {
         // NOTE: Expand to redirect to app home page
+        Intent homeActivity = new Intent(getApplicationContext(), HomeActivity.class);
+        startActivity(homeActivity);
+        finish();
 
         //finish();
       } else {
