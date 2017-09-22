@@ -28,4 +28,5 @@
 
     <string name="prompt_create_account">No account? Create one</string>
     <string name="prompt_login">Already have an account? Login</string>
+    <string name="title_activity_home">HomeActivity</string>
 </resources>
