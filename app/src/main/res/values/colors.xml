@@ -8,4 +8,7 @@
     <!-- Account page colours -->
     <color name="account_primaryText">#FFFFFF</color>
     <color name="account_secondaryText">#BEEDF4</color>
+
+    <!-- Colors -->
+    <color name="white">#FFFFFF</color>
 </resources>
