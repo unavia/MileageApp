@@ -26,4 +26,12 @@ public class HomeActivity extends AppCompatActivity {
     });
   }
 
+  /**
+   * Move the app to the background on "Back" button press
+   */
+  @Override
+  public void onBackPressed() {
+    // Move the app to the Android background rather than allowing the user to return to "Login" activity
+    moveTaskToBack(true);
+  }
 }

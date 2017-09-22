@@ -253,9 +253,10 @@ public class LoginActivity extends AppCompatActivity {
       mProgressDialog.dismiss();
 
       if (success) {
-        // NOTE: Expand to redirect to app home page
-        Intent homeActivity = new Intent(getApplicationContext(), HomeActivity.class);
-        startActivity(homeActivity);
+        // Set navigation history (home) and start the Home activity
+        Intent homeActivityIntent = new Intent(getApplicationContext(), HomeActivity.class);
+        homeActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+        startActivity(homeActivityIntent);
         finish();
 
         //finish();
