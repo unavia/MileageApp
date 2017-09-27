@@ -22,9 +22,8 @@ import org.dom4j.Node;
 
 import java.util.List;
 
-import ca.kendallroth.mileageapp.HomeActivity;
+import ca.kendallroth.mileageapp.activities.HomeActivity;
 import ca.kendallroth.mileageapp.R;
-import ca.kendallroth.mileageapp.archive.CreateAccountActivity;
 import ca.kendallroth.mileageapp.utils.XMLFileUtils;
 
 /**

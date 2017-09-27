@@ -10,7 +10,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="32dp"
-    tools:context="ca.kendallroth.mileageapp.LoginFragment">
+    tools:context="ca.kendallroth.mileageapp.fragments.LoginFragment">
 
     <!-- Email input -->
     <android.support.design.widget.TextInputLayout

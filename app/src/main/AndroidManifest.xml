@@ -22,12 +22,12 @@
                 android:value=".archive.LoginActivity"/>
         </activity>
         <activity
-            android:name=".HomeActivity"
+            android:name=".activities.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name=".AuthActivity">
+            android:name=".activities.AuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

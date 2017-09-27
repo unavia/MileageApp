@@ -1,10 +1,12 @@
-package ca.kendallroth.mileageapp;
+package ca.kendallroth.mileageapp.activities;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import ca.kendallroth.mileageapp.R;
+import ca.kendallroth.mileageapp.components.ContentSwitcher;
 import ca.kendallroth.mileageapp.tab_adapters.AccountTabAdapter;
 
 /**

@@ -8,8 +8,8 @@ import android.util.Log;
 import java.util.Arrays;
 import java.util.List;
 
-import ca.kendallroth.mileageapp.LoginFragment;
-import ca.kendallroth.mileageapp.RegisterFragment;
+import ca.kendallroth.mileageapp.fragments.LoginFragment;
+import ca.kendallroth.mileageapp.fragments.RegisterFragment;
 
 /**
  * Custom FragmentPagerAdapter for the Account ContentSwitcher

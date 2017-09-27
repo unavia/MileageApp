@@ -10,7 +10,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="32dp"
-    tools:context="ca.kendallroth.mileageapp.RegisterFragment">
+    tools:context="ca.kendallroth.mileageapp.fragments.RegisterFragment">
 
     <!-- Name input -->
     <android.support.design.widget.TextInputLayout

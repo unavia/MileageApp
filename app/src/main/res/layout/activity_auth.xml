@@ -24,7 +24,7 @@
         android:layout_gravity="center_horizontal" />
 
     <!-- ContentSwitcher for Login/Register activities -->
-    <ca.kendallroth.mileageapp.ContentSwitcher
+    <ca.kendallroth.mileageapp.components.ContentSwitcher
         android:id="@+id/content_switcher"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"/>

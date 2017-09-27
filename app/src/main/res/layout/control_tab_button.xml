@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Button
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:padding="16dp"
-    android:textSize="18dp"
-    android:textColor="@color/account_secondaryText"
-    style="?android:attr/borderlessButtonStyle"/>

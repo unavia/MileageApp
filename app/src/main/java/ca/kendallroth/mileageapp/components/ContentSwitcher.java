@@ -1,4 +1,4 @@
-  package ca.kendallroth.mileageapp;
+  package ca.kendallroth.mileageapp.components;
 
   import android.content.Context;
   import android.support.design.widget.TabLayout;
@@ -9,6 +9,8 @@
   import android.util.Log;
   import android.view.LayoutInflater;
   import android.widget.LinearLayout;
+
+  import ca.kendallroth.mileageapp.R;
 
   /**
    * Tabbed Fragment layout with swipe functionality
@@ -22,7 +24,7 @@
     public ContentSwitcher(Context context) {
       super(context);
 
-      Log.d("MileageApp", "ca.kendallroth.mileageapp.ContentSwitcher initialized");
+      Log.d("MileageApp", "ca.kendallroth.mileageapp.components.ContentSwitcher initialized");
 
       init(context);
     }
@@ -31,7 +33,7 @@
     public ContentSwitcher(Context context, AttributeSet attributes) {
       super(context, attributes);
 
-      Log.d("MileageApp", "ca.kendallroth.mileageapp.ContentSwitcher initialized (2)");
+      Log.d("MileageApp", "ca.kendallroth.mileageapp.components.ContentSwitcher initialized (2)");
 
       init(context);
     }
