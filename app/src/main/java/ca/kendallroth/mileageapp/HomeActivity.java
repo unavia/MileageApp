@@ -7,6 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+/**
+ * Main activity after authentication has occurred (automatic or Login activity)
+ */
 public class HomeActivity extends AppCompatActivity {
 
   @Override

@@ -1,7 +1,5 @@
 package ca.kendallroth.mileageapp;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -9,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * Fragment to allow users to login (or automatically authenticate)
+ */
 public class LoginFragment extends Fragment {
   // Helper constants for argument variable names
   private static final String ARG_TITLE = "mTitle";

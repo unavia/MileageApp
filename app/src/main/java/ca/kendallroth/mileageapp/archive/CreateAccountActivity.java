@@ -1,4 +1,4 @@
-package ca.kendallroth.mileageapp;
+package ca.kendallroth.mileageapp.archive;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -14,12 +14,17 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.Node;
 
 import java.util.List;
 
+import ca.kendallroth.mileageapp.R;
+import ca.kendallroth.mileageapp.utils.XMLFileUtils;
+
+/**
+ * Activity to enable users to register for the App
+ */
 public class CreateAccountActivity extends AppCompatActivity {
 
   // Create Account asynchronous task

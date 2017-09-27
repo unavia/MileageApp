@@ -1,4 +1,4 @@
-package ca.kendallroth.mileageapp;
+package ca.kendallroth.mileageapp.archive;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -22,8 +22,13 @@ import org.dom4j.Node;
 
 import java.util.List;
 
+import ca.kendallroth.mileageapp.HomeActivity;
+import ca.kendallroth.mileageapp.R;
+import ca.kendallroth.mileageapp.archive.CreateAccountActivity;
+import ca.kendallroth.mileageapp.utils.XMLFileUtils;
+
 /**
- * A login screen that offers login via email/password.
+ * Activity to enable users to login to the app
  */
 public class LoginActivity extends AppCompatActivity {
 

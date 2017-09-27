@@ -6,8 +6,13 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="32dp"
     tools:context="ca.kendallroth.mileageapp.LoginFragment">
 
+    <!-- Email input -->
     <android.support.design.widget.TextInputLayout
         android:id="@+id/login_email_layout"
         android:layout_width="match_parent"
@@ -16,7 +21,6 @@
         app:errorEnabled="true"
         app:errorTextAppearance="@style/account_errorText">
 
-        <!-- Email input -->
         <AutoCompleteTextView
             android:id="@+id/login_email"
             android:layout_width="match_parent"
@@ -27,6 +31,7 @@
 
     </android.support.design.widget.TextInputLayout>
 
+    <!-- Password input -->
     <android.support.design.widget.TextInputLayout
         android:id="@+id/login_password_layout"
         android:layout_width="match_parent"
@@ -37,7 +42,6 @@
         app:passwordToggleEnabled="true"
         app:passwordToggleTint="@color/account_secondaryText">
 
-        <!-- Password input -->
         <EditText
             android:id="@+id/login_password"
             android:layout_width="match_parent"
@@ -63,18 +67,5 @@
         android:text="@string/button_login"
         android:textColor="@color/account_primaryText"
         android:textStyle="bold"/>
-
-    <!-- Create account button -->
-    <Button
-        android:id="@+id/create_account_button"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_gravity="center_horizontal"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="@string/prompt_create_account"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textColor="@color/account_secondaryText"
-        />
 
 </LinearLayout>
