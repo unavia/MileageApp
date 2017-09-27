@@ -2,6 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/form_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
@@ -14,7 +15,7 @@
 
     <!-- Email input -->
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/login_email_layout"
+        android:id="@+id/email_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/account_editText"
@@ -22,7 +23,7 @@
         app:errorTextAppearance="@style/account_errorText">
 
         <AutoCompleteTextView
-            android:id="@+id/login_email"
+            android:id="@+id/email_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_email"
@@ -33,7 +34,7 @@
 
     <!-- Password input -->
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/login_password_layout"
+        android:id="@+id/password_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/account_editText"
@@ -43,7 +44,7 @@
         app:passwordToggleTint="@color/account_secondaryText">
 
         <EditText
-            android:id="@+id/login_password"
+            android:id="@+id/password_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_password"
