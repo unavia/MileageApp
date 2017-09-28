@@ -67,4 +67,12 @@
     public void setPageChangeListener(OnPageChangeListener pageChangeListener) {
       mTabPager.addOnPageChangeListener(pageChangeListener);
     }
+
+    /**
+     * Set the current ViewPager item by position
+     * @param position Position to set as current item
+     */
+    public void setPage(int position) {
+      mTabPager.setCurrentItem(position);
+    }
   }

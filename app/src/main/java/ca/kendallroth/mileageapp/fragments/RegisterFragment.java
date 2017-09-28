@@ -1,6 +1,7 @@
 package ca.kendallroth.mileageapp.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -35,7 +36,6 @@ public class RegisterFragment extends Fragment {
 
   // UI references.
   private Button mCreateAccountButton;
-  private Button mLoginPromptButton;
   private EditText mEmailView;
   private EditText mNameView;
   private EditText mPasswordView;
@@ -45,7 +45,6 @@ public class RegisterFragment extends Fragment {
   private TextInputLayout mPasswordViewLayout;
   private TextInputLayout mPasswordConfirmViewLayout;
   private ProgressDialog mProgressDialog;
-  private View mCreateAccountFormView;
 
   // Helper constants for argument variable names
   private static final String ARG_TITLE = "mTitle";
@@ -53,6 +52,7 @@ public class RegisterFragment extends Fragment {
   private String mTitle;
 
   //private OnFragmentInteractionListener mListener;
+  private AccountCreateListener mAccountCreateListener;
 
   public RegisterFragment() {
     // Required empty public constructor
@@ -67,6 +67,20 @@ public class RegisterFragment extends Fragment {
     fragment.setArguments(args);
 
     return fragment;
+  }
+
+  /**
+   * Activities that contain this fragment must implement the methods in this interface in order to
+   *  communicated with the fragment.
+   *  Example: "http://developer.android.com/training/basics/fragments/communicating.html"
+   */
+  public interface AccountCreateListener {
+    /**
+     * Trigger an account creation process (only requested after account information has been validated)
+     * @param email    Account email
+     * @param password Account password
+     */
+    public void onAccountCreateRequest(String email, String password);
   }
 
   @Override
@@ -85,6 +99,36 @@ public class RegisterFragment extends Fragment {
     // Inflate the layout for this fragment
     View createAccountView = inflater.inflate(R.layout.fragment_register, container, false);
 
+    // Initialize the view and variables
+    this.initView(createAccountView);
+
+    return createAccountView;
+  }
+
+  @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+
+    // Verify that the interface was properly implemented in the Activity
+    if (context instanceof AccountCreateListener) {
+      mAccountCreateListener = (AccountCreateListener) context;
+    } else {
+      throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+    }
+  }
+
+  @Override
+  public void onDetach() {
+    super.onDetach();
+
+    mAccountCreateListener = null;
+  }
+
+  /**
+   * Initialize the Fragment view after view creation
+   * @param createAccountView Fragment view
+   */
+  private void initView(View createAccountView) {
     // Email field
     mEmailView = (EditText) createAccountView.findViewById(R.id.email_input);
     mEmailViewLayout = (TextInputLayout) createAccountView.findViewById(R.id.email_layout);
@@ -113,18 +157,13 @@ public class RegisterFragment extends Fragment {
     // Progress dialog
     mProgressDialog = new ProgressDialog(getContext());
     mProgressDialog.setMessage(getString(R.string.progress_message_create_account));
-
-    // Layout views
-    mCreateAccountFormView = (View) createAccountView.findViewById(R.id.create_account_form);
-
-    return createAccountView;
   }
 
 
   /**
    * Clear the inputs and errors
    */
-  private void clearLoginInputs() {
+  public void clearLoginInputs() {
     mEmailView.setText("");
     mEmailViewLayout.setError(null);
 
@@ -220,45 +259,6 @@ public class RegisterFragment extends Fragment {
     }
   }
 
-  // TODO: Rename method, update argument and hook method into UI event
-  /*public void onButtonPressed(Uri uri) {
-    if (mListener != null) {
-      mListener.onFragmentInteraction(uri);
-    }
-  }*/
-
-  /*@Override
-  public void onAttach(Context context) {
-    super.onAttach(context);
-    if (context instanceof OnFragmentInteractionListener) {
-      mListener = (OnFragmentInteractionListener) context;
-    } else {
-      throw new RuntimeException(context.toString()
-          + " must implement OnFragmentInteractionListener");
-    }
-  }*/
-
-  /*@Override
-  public void onDetach() {
-    super.onDetach();
-    mListener = null;
-  }*/
-
-  /**
-   * This interface must be implemented by activities that contain this
-   * fragment to allow an interaction in this fragment to be communicated
-   * to the activity and potentially other fragments contained in that
-   * activity.
-   * <p>
-   * See the Android Training lesson <a href=
-   * "http://developer.android.com/training/basics/fragments/communicating.html"
-   * >Communicating with Other Fragments</a> for more information.
-   */
-  /*public interface OnFragmentInteractionListener {
-    // TODO: Update argument type and name
-    void onFragmentInteraction(Uri uri);
-  }*/
-
 
   /**
    * Represents an asynchronous account creation task used to create a user account
@@ -334,17 +334,24 @@ public class RegisterFragment extends Fragment {
         // NOTE: Determine what to do on successful account creation (likely send email)
         // TODO: Redirect to Login screen (now a tab)
         //getActivity().finish();
+
+        // TODO: Account creation should happen in parent
+        if (mAccountCreateListener != null) {
+          mAccountCreateListener.onAccountCreateRequest(mEmail, mPassword);
+        }
       } else {
         mEmailViewLayout.setError(getString(R.string.error_account_already_exists));
         mEmailViewLayout.requestFocus();
       }
 
-      // TODO: Find why this doesn't work (even on failure)
+      // Need to use the android "content" layout as the snackbar anchor (since this is a fragment)
+      View snackbarRoot = getActivity().findViewById(android.R.id.content);
+
       // Define a snackbar based on the operation status
       CharSequence snackbarResource = success
           ? getString(R.string.success_create_account)
           : getString(R.string.failure_create_account);
-      Snackbar resultSnackbar = Snackbar.make(mCreateAccountFormView, snackbarResource, Snackbar.LENGTH_SHORT);
+      Snackbar resultSnackbar = Snackbar.make(snackbarRoot, snackbarResource, Snackbar.LENGTH_SHORT);
       resultSnackbar.show();
     }
 

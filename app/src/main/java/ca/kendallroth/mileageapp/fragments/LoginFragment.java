@@ -85,6 +85,17 @@ public class LoginFragment extends Fragment {
     // Inflate the layout for this fragment
     View loginView = inflater.inflate(R.layout.fragment_login, container, false);
 
+    // Initialize the view and variables
+    this.initView(loginView);
+
+    return loginView;
+  }
+
+  /**
+   * Initialize the Fragment view after view creation
+   * @param loginView Fragment view
+   */
+  private void initView(View loginView) {
     // Email input
     mEmailInput = (EditText) loginView.findViewById(R.id.email_input);
     mEmailViewLayout = (TextInputLayout) loginView.findViewById(R.id.email_layout);
@@ -119,8 +130,6 @@ public class LoginFragment extends Fragment {
 
     // Layout views
     mFormLayout = loginView.findViewById(R.id.form_layout);
-
-    return loginView;
   }
 
   /**
@@ -181,7 +190,7 @@ public class LoginFragment extends Fragment {
   /**
    * Clear the inputs and errors
    */
-  private void clearLoginInputs() {
+  public void clearLoginInputs() {
     mEmailInput.setText("");
     mEmailViewLayout.setError(null);
 
@@ -298,12 +307,14 @@ public class LoginFragment extends Fragment {
         mPasswordInput.requestFocus();
       }
 
-      // TODO: Figure out why Snackbar never shows (even for failure)
+      // Need to use the android "content" layout as the snackbar anchor (since this is a fragment)
+      View snackbarRoot = getActivity().findViewById(android.R.id.content);
+
       // Define a snackbar based on the operation status
       CharSequence snackbarResource = success
           ? getString(R.string.success_login)
           : getString(R.string.failure_login);
-      Snackbar resultSnackbar = Snackbar.make(mFormLayout, snackbarResource, Snackbar.LENGTH_SHORT);
+      Snackbar resultSnackbar = Snackbar.make(snackbarRoot, snackbarResource, Snackbar.LENGTH_SHORT);
       resultSnackbar.show();
     }
 
