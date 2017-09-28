@@ -1,7 +1,7 @@
 package ca.kendallroth.mileageapp.fragments;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -27,7 +27,6 @@ import org.dom4j.Node;
 import java.util.List;
 
 import ca.kendallroth.mileageapp.R;
-import ca.kendallroth.mileageapp.activities.HomeActivity;
 import ca.kendallroth.mileageapp.utils.AccountUtils;
 import ca.kendallroth.mileageapp.utils.ClearableFragment;
 import ca.kendallroth.mileageapp.utils.ScrollableFragment;
@@ -56,7 +55,7 @@ public class LoginFragment extends Fragment implements ClearableFragment, Scroll
 
   private String mTitle;
 
-  //private OnFragmentInteractionListener mListener;
+  private LoginAttemptListener mLoginAttemptListener;
 
   public LoginFragment() {
     // Required empty public constructor
@@ -71,6 +70,19 @@ public class LoginFragment extends Fragment implements ClearableFragment, Scroll
     fragment.setArguments(args);
 
     return fragment;
+  }
+
+  /**
+   * Activities that contain this fragment must implement the methods in this interface in order to
+   *  communicated with the fragment.
+   *  Example: "http://developer.android.com/training/basics/fragments/communicating.html"
+   */
+  public interface LoginAttemptListener {
+    /**
+     * Trigger a login attempt response
+     * @param success Whether login attempt was successful
+     */
+    public void onLoginAttempt(boolean success);
   }
 
   @Override
@@ -93,6 +105,25 @@ public class LoginFragment extends Fragment implements ClearableFragment, Scroll
     this.initView(loginView);
 
     return loginView;
+  }
+
+  @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+
+    // Verify that the interface was properly implemented in the Activity
+    if (context instanceof LoginAttemptListener) {
+      mLoginAttemptListener = (LoginAttemptListener) context;
+    } else {
+      throw new RuntimeException(context.toString() + " must implement LoginAttemptListener");
+    }
+  }
+
+  @Override
+  public void onDetach() {
+    super.onDetach();
+
+    mLoginAttemptListener = null;
   }
 
   /**
@@ -240,45 +271,6 @@ public class LoginFragment extends Fragment implements ClearableFragment, Scroll
     }
   }
 
-  // TODO: Rename method, update argument and hook method into UI event
-  /*public void onButtonPressed(Uri uri) {
-    if (mListener != null) {
-      mListener.onFragmentInteraction(uri);
-    }
-  }*/
-
-  /*@Override
-  public void onAttach(Context context) {
-    super.onAttach(context);
-    if (context instanceof OnFragmentInteractionListener) {
-      mListener = (OnFragmentInteractionListener) context;
-    } else {
-      throw new RuntimeException(context.toString()
-          + " must implement OnFragmentInteractionListener");
-    }
-  }*/
-
-  /*@Override
-  public void onDetach() {
-    super.onDetach();
-    mListener = null;
-  }*/
-
-  /**
-   * This interface must be implemented by activities that contain this
-   * fragment to allow an interaction in this fragment to be communicated
-   * to the activity and potentially other fragments contained in that
-   * activity.
-   * <p>
-   * See the Android Training lesson <a href=
-   * "http://developer.android.com/training/basics/fragments/communicating.html"
-   * >Communicating with Other Fragments</a> for more information.
-   */
-  /*public interface OnFragmentInteractionListener {
-    // TODO: Update argument type and name
-    void onFragmentInteraction(Uri uri);
-  }*/
-
 
   /**
    * Represents an asynchronous login/registration task used to authenticate the user.
@@ -339,11 +331,8 @@ public class LoginFragment extends Fragment implements ClearableFragment, Scroll
       mProgressDialog.dismiss();
 
       if (success) {
-        // Set navigation history (home) and start the Home activity
-        Intent homeActivityIntent = new Intent(getContext().getApplicationContext(), HomeActivity.class);
-        homeActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
-        startActivity(homeActivityIntent);
-        getActivity().finish();
+        // Indicate the success of the login attempt in the parent callback
+        mLoginAttemptListener.onLoginAttempt(true);
       } else {
         mPasswordViewLayout.setError(getString(R.string.error_incorrect_password));
         mPasswordInput.requestFocus();

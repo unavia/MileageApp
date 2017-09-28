@@ -1,5 +1,6 @@
 package ca.kendallroth.mileageapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -9,18 +10,17 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import ca.kendallroth.mileageapp.fragments.LoginFragment;
+import ca.kendallroth.mileageapp.fragments.LoginFragment.LoginAttemptListener;
 import ca.kendallroth.mileageapp.fragments.RegisterFragment;
 import ca.kendallroth.mileageapp.fragments.RegisterFragment.AccountCreateListener;
 import ca.kendallroth.mileageapp.R;
 import ca.kendallroth.mileageapp.components.ContentSwitcher;
 import ca.kendallroth.mileageapp.tab_adapters.AccountTabAdapter;
-import ca.kendallroth.mileageapp.utils.ClearableFragment;
-import ca.kendallroth.mileageapp.utils.ScrollableFragment;
 
 /**
  * Authorization activity that displays Login and Register workflows in a ViewPager
  */
-public class AuthActivity extends AppCompatActivity implements AccountCreateListener {
+public class AuthActivity extends AppCompatActivity implements AccountCreateListener, LoginAttemptListener {
 
   private ArrayList<Fragment> mAdapterFragments;
   private AccountTabAdapter mTabAdapter;
@@ -66,6 +66,20 @@ public class AuthActivity extends AppCompatActivity implements AccountCreateList
 
     // Hide the Action bar (on all "Authentication" activities)
     getSupportActionBar().hide();
+  }
+
+  @Override
+  public void onLoginAttempt(boolean success) {
+    // Only redirect to the home page when the login is successful
+    if (!success) {
+      return;
+    }
+
+    // Set navigation history (home) and start the Home activity
+    Intent homeActivityIntent = new Intent(this, HomeActivity.class);
+    homeActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+    startActivity(homeActivityIntent);
+    finish();
   }
 
   @Override

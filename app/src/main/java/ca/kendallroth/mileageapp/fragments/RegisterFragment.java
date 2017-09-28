@@ -52,7 +52,6 @@ public class RegisterFragment extends Fragment implements ClearableFragment {
 
   private String mTitle;
 
-  //private OnFragmentInteractionListener mListener;
   private AccountCreateListener mAccountCreateListener;
 
   public RegisterFragment() {
@@ -114,7 +113,7 @@ public class RegisterFragment extends Fragment implements ClearableFragment {
     if (context instanceof AccountCreateListener) {
       mAccountCreateListener = (AccountCreateListener) context;
     } else {
-      throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+      throw new RuntimeException(context.toString() + " must implement AccountCreateListener");
     }
   }
 
