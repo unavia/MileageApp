@@ -1,4 +1,4 @@
-package ca.kendallroth.mileageapp;
+package ca.kendallroth.mileageapp.archive;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -22,8 +22,12 @@ import org.dom4j.Node;
 
 import java.util.List;
 
+import ca.kendallroth.mileageapp.activities.HomeActivity;
+import ca.kendallroth.mileageapp.R;
+import ca.kendallroth.mileageapp.utils.XMLFileUtils;
+
 /**
- * A login screen that offers login via email/password.
+ * Activity to enable users to login to the app
  */
 public class LoginActivity extends AppCompatActivity {
 
@@ -253,9 +257,10 @@ public class LoginActivity extends AppCompatActivity {
       mProgressDialog.dismiss();
 
       if (success) {
-        // NOTE: Expand to redirect to app home page
-        Intent homeActivity = new Intent(getApplicationContext(), HomeActivity.class);
-        startActivity(homeActivity);
+        // Set navigation history (home) and start the Home activity
+        Intent homeActivityIntent = new Intent(getApplicationContext(), HomeActivity.class);
+        homeActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+        startActivity(homeActivityIntent);
         finish();
 
         //finish();

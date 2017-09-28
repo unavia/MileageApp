@@ -1,4 +1,4 @@
-package ca.kendallroth.mileageapp;
+package ca.kendallroth.mileageapp.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -7,6 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import ca.kendallroth.mileageapp.R;
+
+/**
+ * Main activity after authentication has occurred (automatic or Login activity)
+ */
 public class HomeActivity extends AppCompatActivity {
 
   @Override
@@ -26,4 +31,12 @@ public class HomeActivity extends AppCompatActivity {
     });
   }
 
+  /**
+   * Move the app to the background on "Back" button press
+   */
+  @Override
+  public void onBackPressed() {
+    // Move the app to the Android background rather than allowing the user to return to "Login" activity
+    moveTaskToBack(true);
+  }
 }

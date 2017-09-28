@@ -1,0 +1,110 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <LinearLayout
+        android:id="@+id/form_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="32dp"
+        tools:context="ca.kendallroth.mileageapp.fragments.RegisterFragment">
+
+        <!-- Name input -->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/name_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/account_editText"
+            app:errorEnabled="true"
+            app:errorTextAppearance="@style/account_errorText">
+
+            <EditText
+                android:id="@+id/name_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_name"
+                android:inputType="text"
+                android:maxLines="1" />
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- Email input -->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/email_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/account_editText"
+            app:errorEnabled="true"
+            app:errorTextAppearance="@style/account_errorText">
+
+            <EditText
+                android:id="@+id/email_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_email"
+                android:inputType="textEmailAddress"
+                android:maxLines="1" />
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- Password input -->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/password_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/account_editText"
+            app:errorEnabled="true"
+            app:errorTextAppearance="@style/account_errorText"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/account_secondaryText">
+
+            <EditText
+                android:id="@+id/password_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_password"
+                android:inputType="textPassword"
+                android:maxLines="1" />
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- Password confirm input -->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/password_confirm_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/account_editText"
+            app:errorEnabled="true"
+            app:errorTextAppearance="@style/account_errorText"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/account_secondaryText">
+
+            <EditText
+                android:id="@+id/password_confirm_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_password_confirm"
+                android:inputType="textPassword"
+                android:maxLines="1" />
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- Create Account button -->
+        <Button
+            android:id="@+id/create_account_button"
+            style="?android:textAppearanceSmall"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_width="match_parent"
+            android:background="@color/primaryDark"
+            android:text="@string/button_create_account"
+            android:textColor="@color/account_primaryText"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+</ScrollView>

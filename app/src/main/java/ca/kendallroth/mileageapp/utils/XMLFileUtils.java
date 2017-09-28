@@ -1,4 +1,4 @@
-package ca.kendallroth.mileageapp;
+package ca.kendallroth.mileageapp.utils;
 
 import android.content.Context;
 

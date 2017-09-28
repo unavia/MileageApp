@@ -8,4 +8,9 @@
     <!-- Account page colours -->
     <color name="account_primaryText">#FFFFFF</color>
     <color name="account_secondaryText">#BEEDF4</color>
+    <color name="account_tab_group_underline">#44CEE0</color>
+    <color name="account_tab_selected_underline">#FFFFFF</color>
+
+    <!-- Colors -->
+    <color name="white">#FFFFFF</color>
 </resources>
