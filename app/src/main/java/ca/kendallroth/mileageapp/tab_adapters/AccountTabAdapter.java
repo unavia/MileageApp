@@ -3,39 +3,41 @@ package ca.kendallroth.mileageapp.tab_adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import ca.kendallroth.mileageapp.fragments.LoginFragment;
-import ca.kendallroth.mileageapp.fragments.RegisterFragment;
 
 /**
  * Custom FragmentPagerAdapter for the Account ContentSwitcher
  */
 public class AccountTabAdapter extends FragmentPagerAdapter {
 
-  private static int NUM_ITEMS = 2;
+  // Expose a list of fragments in order to call public functions
+  //  Taken from: https://stackoverflow.com/questions/25629042/calling-a-fragment-method-from-an-activity-android-tabs
+  private ArrayList<Fragment> mAdapterFragments;
 
   // UI Components
   private List<String> mTabTitles;
 
-  public AccountTabAdapter(FragmentManager fragmentManager) {
+  public AccountTabAdapter(FragmentManager fragmentManager, ArrayList<Fragment> adapterFragments) {
     super(fragmentManager);
+
+    // Set the list of adapter fragments
+    mAdapterFragments = adapterFragments;
 
     // Set tab titles list
     mTabTitles = Arrays.asList("Login", "Register");
-
-    // DEBUG: Log an error if the amount of tab titles doesn't equal the amount of actual tab items
-    if (mTabTitles.size() != NUM_ITEMS) {
-      Log.e("MileageApp", "Tab title count is different than NUM_ITEMS (number of tabs)");
-    }
   }
 
   @Override
   public int getCount() {
-    return NUM_ITEMS;
+    return mAdapterFragments.size();
+  }
+
+  @Override
+  public int getItemPosition(Object object) {
+    return POSITION_NONE;
   }
 
   @Override
@@ -46,21 +48,7 @@ public class AccountTabAdapter extends FragmentPagerAdapter {
 
   @Override
   public Fragment getItem(int position) {
-    Fragment fragment;
-
-    // Return the requested (selected) fragment
-    switch (position) {
-      case 0:
-        fragment =  LoginFragment.newInstance("Login");
-        break;
-      case 1:
-        fragment = RegisterFragment.newInstance("Register");
-        break;
-      default:
-        fragment = null;
-        break;
-    }
-
-    return fragment;
+    // Return the Fragment at the requested position
+    return mAdapterFragments.get(position);
   }
 }

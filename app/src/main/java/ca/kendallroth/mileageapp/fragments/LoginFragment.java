@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -28,12 +29,14 @@ import java.util.List;
 import ca.kendallroth.mileageapp.R;
 import ca.kendallroth.mileageapp.activities.HomeActivity;
 import ca.kendallroth.mileageapp.utils.AccountUtils;
+import ca.kendallroth.mileageapp.utils.ClearableFragment;
+import ca.kendallroth.mileageapp.utils.ScrollableFragment;
 import ca.kendallroth.mileageapp.utils.XMLFileUtils;
 
 /**
  * Fragment to allow users to login (or automatically authenticate)
  */
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment implements ClearableFragment, ScrollableFragment {
 
   // Login asynchronous task
   private LoginTask mAuthTask = null;
@@ -42,6 +45,7 @@ public class LoginFragment extends Fragment {
   private Button mLoginButton;
   private EditText mEmailInput;
   private EditText mPasswordInput;
+  private ScrollView mScrollView;
   private TextInputLayout mEmailViewLayout;
   private TextInputLayout mPasswordViewLayout;
   private ProgressDialog mProgressDialog;
@@ -130,6 +134,7 @@ public class LoginFragment extends Fragment {
 
     // Layout views
     mFormLayout = loginView.findViewById(R.id.form_layout);
+    mScrollView = (ScrollView) loginView.findViewById(R.id.scroll_view);
   }
 
   /**
@@ -188,14 +193,51 @@ public class LoginFragment extends Fragment {
   }
 
   /**
+   * Prefill the login view after account creation
+   * @param email Pre-filled email address
+   */
+  public void prefillLogin(String email) {
+    // Reject the prefill attempt if invalid information is given
+    if (!AccountUtils.validateEmail(email)) {
+      return;
+    }
+
+    // Prefill the email field and focus on the password field
+    mEmailInput.setText(email);
+    mEmailViewLayout.setError(null);
+
+    mPasswordInput.requestFocus();
+  }
+
+  /**
    * Clear the inputs and errors
    */
-  public void clearLoginInputs() {
+  public void clearInputs() {
     mEmailInput.setText("");
     mEmailViewLayout.setError(null);
+    mEmailInput.requestFocus();
 
     mPasswordInput.setText("");
     mPasswordViewLayout.setError(null);
+  }
+
+  /**
+   * Scroll to the top of the fragment
+   */
+  public void scrollToTop() {
+    scrollToTop(true);
+  }
+
+  /**
+   * Scroll to the top of the fragment
+   * @param smoothScroll Whether smooth scrolling should be enabled
+   */
+  public void scrollToTop(boolean smoothScroll) {
+    if (smoothScroll) {
+      mScrollView.smoothScrollTo(0, 0);
+    } else {
+      mScrollView.scrollTo(0, 0);
+    }
   }
 
   // TODO: Rename method, update argument and hook method into UI event
@@ -241,7 +283,7 @@ public class LoginFragment extends Fragment {
   /**
    * Represents an asynchronous login/registration task used to authenticate the user.
    */
-  public class LoginTask extends AsyncTask<Void, Void, Boolean> {
+  private class LoginTask extends AsyncTask<Void, Void, Boolean> {
 
     private final String mEmail;
     private final String mPassword;

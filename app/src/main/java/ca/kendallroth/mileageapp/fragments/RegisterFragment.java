@@ -24,12 +24,13 @@ import java.util.List;
 
 import ca.kendallroth.mileageapp.R;
 import ca.kendallroth.mileageapp.utils.AccountUtils;
+import ca.kendallroth.mileageapp.utils.ClearableFragment;
 import ca.kendallroth.mileageapp.utils.XMLFileUtils;
 
 /**
  * Fragment for enabling a user to register for the app
  */
-public class RegisterFragment extends Fragment {
+public class RegisterFragment extends Fragment implements ClearableFragment {
 
   // Create Account asynchronous task
   private CreateAccountTask mAuthTask;
@@ -163,9 +164,10 @@ public class RegisterFragment extends Fragment {
   /**
    * Clear the inputs and errors
    */
-  public void clearLoginInputs() {
+  public void clearInputs() {
     mEmailView.setText("");
     mEmailViewLayout.setError(null);
+    mEmailView.requestFocus();
 
     mNameView.setText("");
     mNameViewLayout.setError(null);
@@ -263,7 +265,7 @@ public class RegisterFragment extends Fragment {
   /**
    * Represents an asynchronous account creation task used to create a user account
    */
-  public class CreateAccountTask extends AsyncTask<Void, Void, Boolean> {
+  private class CreateAccountTask extends AsyncTask<Void, Void, Boolean> {
 
     private final String mEmail;
     private final String mName;
@@ -332,11 +334,10 @@ public class RegisterFragment extends Fragment {
 
       if (success) {
         // NOTE: Determine what to do on successful account creation (likely send email)
-        // TODO: Redirect to Login screen (now a tab)
-        //getActivity().finish();
 
         // TODO: Account creation should happen in parent
         if (mAccountCreateListener != null) {
+          // Set parent Activity to Login view using callback
           mAccountCreateListener.onAccountCreateRequest(mEmail, mPassword);
         }
       } else {
@@ -363,4 +364,3 @@ public class RegisterFragment extends Fragment {
     }
   }
 }
-
