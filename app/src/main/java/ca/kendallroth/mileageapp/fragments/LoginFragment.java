@@ -27,6 +27,7 @@ import java.util.List;
 
 import ca.kendallroth.mileageapp.R;
 import ca.kendallroth.mileageapp.activities.HomeActivity;
+import ca.kendallroth.mileageapp.utils.AccountUtils;
 import ca.kendallroth.mileageapp.utils.XMLFileUtils;
 
 /**
@@ -149,7 +150,7 @@ public class LoginFragment extends Fragment {
       focusView = mPasswordInput;
       cancel = true;
     }
-    else if (!isPasswordValid(password)) {
+    else if (!AccountUtils.validatePassword(password)) {
       mPasswordViewLayout.setError(getString(R.string.error_invalid_password));
       focusView = mPasswordInput;
       cancel = true;
@@ -160,7 +161,7 @@ public class LoginFragment extends Fragment {
       mEmailViewLayout.setError(getString(R.string.error_field_required));
       focusView = mEmailInput;
       cancel = true;
-    } else if (!isEmailValid(email)) {
+    } else if (!AccountUtils.validateEmail(email)) {
       mEmailViewLayout.setError(getString(R.string.error_invalid_email));
       focusView = mEmailInput;
       cancel = true;
@@ -176,27 +177,6 @@ public class LoginFragment extends Fragment {
       mAuthTask.execute((Void) null);
     }
   }
-
-  /**
-   * Validate the email
-   * @param email Email address
-   * @return Whether the email address is valid
-   */
-  private boolean isEmailValid(String email) {
-    //TODO: Replace with updated logic
-    return email.contains("@") && email.contains(".");
-  }
-
-  /**
-   * Validate the password
-   * @param password Password
-   * @return Whether the password is valid
-   */
-  private boolean isPasswordValid(String password) {
-    //TODO: Replace with updated logic
-    return password.length() > 4;
-  }
-
 
   /**
    * Clear the inputs and errors

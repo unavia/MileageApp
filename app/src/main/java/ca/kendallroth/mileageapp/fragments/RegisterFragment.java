@@ -22,6 +22,7 @@ import org.dom4j.Node;
 import java.util.List;
 
 import ca.kendallroth.mileageapp.R;
+import ca.kendallroth.mileageapp.utils.AccountUtils;
 import ca.kendallroth.mileageapp.utils.XMLFileUtils;
 
 /**
@@ -119,46 +120,6 @@ public class RegisterFragment extends Fragment {
     return createAccountView;
   }
 
-  /**
-   * Validate the email address
-   * @param email Email address
-   * @return Whether email address is valid
-   */
-  private boolean isEmailValid(String email) {
-    //TODO: Replace with updated logic
-    return email.contains("@") && email.contains(".");
-  }
-
-  /**
-   * Validate the user's name
-   * @param name User name
-   * @return Whether name is valid
-   */
-  private boolean isNameValid(String name) {
-    // TODO: Replace with updated logic
-    return name.length() > 2;
-  }
-
-  /**
-   * Validate the password
-   * @param password Password
-   * @return Whether password is valid
-   */
-  private boolean isPasswordValid(String password) {
-    //TODO: Replace with updated logic
-    return password.length() > 4;
-  }
-
-  /**
-   * Validate the confirmation password
-   * @param password        Password
-   * @param passwordConfirm Confirmation password
-   * @return Whether the confirmation password matches
-   */
-  private boolean isPasswordConfirmValid(String password, String passwordConfirm) {
-    return password.equals(passwordConfirm);
-  }
-
 
   /**
    * Clear the inputs and errors
@@ -207,7 +168,7 @@ public class RegisterFragment extends Fragment {
       focusView = mPasswordConfirmView;
       cancel = true;
     }
-    else if (!isPasswordConfirmValid(password, passwordConfirm)) {
+    else if (!AccountUtils.validatePasswordConfirm(password, passwordConfirm)) {
       mPasswordConfirmViewLayout.setError(getString(R.string.error_mismatching_passwords));
       focusView = mPasswordConfirmView;
       cancel = true;
@@ -219,7 +180,7 @@ public class RegisterFragment extends Fragment {
       focusView = mPasswordView;
       cancel = true;
     }
-    else if (!isPasswordValid(password)) {
+    else if (!AccountUtils.validatePassword(password)) {
       mPasswordViewLayout.setError(getString(R.string.error_invalid_password));
       focusView = mPasswordView;
       cancel = true;
@@ -230,7 +191,7 @@ public class RegisterFragment extends Fragment {
       mEmailViewLayout.setError(getString(R.string.error_field_required));
       focusView = mEmailView;
       cancel = true;
-    } else if (!isEmailValid(email)) {
+    } else if (!AccountUtils.validateEmail(email)) {
       mEmailViewLayout.setError(getString(R.string.error_invalid_email));
       focusView = mEmailView;
       cancel = true;
@@ -241,7 +202,7 @@ public class RegisterFragment extends Fragment {
       mNameViewLayout.setError(getString(R.string.error_field_required));
       focusView = mNameView;
       cancel = true;
-    } else if (!isNameValid(name)) {
+    } else if (!AccountUtils.validateName(name)) {
       mNameViewLayout.setError(getString(R.string.error_invalid_name));
       focusView = mNameView;
       cancel = true;
