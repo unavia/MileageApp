@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:id="@+id/form_layout"
-        android:layout_width="match_parent"
+        android:layout_gravity="center_horizontal"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
@@ -15,6 +15,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="32dp"
+        style="@style/max_width_account_pages"
         tools:context="ca.kendallroth.mileageapp.fragments.RegisterFragment">
 
         <!-- Name input -->

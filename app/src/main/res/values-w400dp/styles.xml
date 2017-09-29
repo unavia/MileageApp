@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Set the max width for the Account (auth) pages on screens over 400dp -->
+    <style name="max_width_account_pages">
+        <item name="android:layout_width">400dp</item>
+</style>
+</resources>
