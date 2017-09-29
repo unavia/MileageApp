@@ -2,6 +2,7 @@ package ca.kendallroth.mileageapp.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -27,6 +28,7 @@ import org.dom4j.Node;
 import java.util.List;
 
 import ca.kendallroth.mileageapp.R;
+import ca.kendallroth.mileageapp.activities.RequestPasswordReset;
 import ca.kendallroth.mileageapp.utils.AccountUtils;
 import ca.kendallroth.mileageapp.utils.ClearableFragment;
 import ca.kendallroth.mileageapp.utils.ScrollableFragment;
@@ -41,6 +43,7 @@ public class LoginFragment extends Fragment implements ClearableFragment, Scroll
   private LoginTask mAuthTask = null;
 
   // UI references.
+  private Button mForgotPasswordButton;
   private Button mLoginButton;
   private EditText mEmailInput;
   private EditText mPasswordInput;
@@ -159,6 +162,15 @@ public class LoginFragment extends Fragment implements ClearableFragment, Scroll
       }
     });
 
+    // Forgot password button
+    mForgotPasswordButton = (Button) loginView.findViewById(R.id.forgot_password_button);
+    mForgotPasswordButton.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        displayRequestPasswordReset();
+      }
+    });
+
     // Progress dialog
     mProgressDialog = new ProgressDialog(loginView.getContext());
     mProgressDialog.setMessage(getString(R.string.progress_message_login_attempt));
@@ -166,6 +178,15 @@ public class LoginFragment extends Fragment implements ClearableFragment, Scroll
     // Layout views
     mFormLayout = loginView.findViewById(R.id.form_layout);
     mScrollView = (ScrollView) loginView.findViewById(R.id.scroll_view);
+  }
+
+  /**
+   * Display the Request Password Reset activity
+   */
+  private void displayRequestPasswordReset() {
+    // Start the Request Password Reset activity
+    Intent requestPasswordResetIntent = new Intent(getActivity(), RequestPasswordReset.class);
+    startActivity(requestPasswordResetIntent);
   }
 
   /**
