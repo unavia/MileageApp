@@ -46,7 +46,7 @@
     <string name="success_create_account">Account created</string>
     <string name="success_login">Login succeeded</string>
     <string name="success_request_password_reset">Password reset requested</string>
-    <string name="success_reset_password">Password reset</string>
+    <string name="success_reset_password">Password reset successfully</string>
 
     <!-- Operation progress messages -->
     <string name="progress_message_create_account">Creating Account</string>

@@ -258,18 +258,6 @@ public class RequestPasswordResetActivity extends AppCompatActivity {
         mEmailViewLayout.setError(getString(R.string.error_reset_password_invalid_email));
         mEmailInput.requestFocus();
       }
-
-      // NOTE: This won't display if the Activity exists at `finish()` above.
-
-      // Use the android "content" layout as the snackbar anchor
-      View snackbarRoot = findViewById(android.R.id.content);
-
-      // Define a snackbar based on the operation status
-      CharSequence snackbarResource = success
-          ? getString(R.string.success_request_password_reset)
-          : getString(R.string.failure_request_password_reset);
-      Snackbar resultSnackbar = Snackbar.make(snackbarRoot, snackbarResource, Snackbar.LENGTH_SHORT);
-      resultSnackbar.show();
     }
 
     @Override
