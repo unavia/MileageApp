@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -47,6 +46,43 @@ public class RequestPasswordResetActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_request_password_reset);
 
+    // Initialize the UI components
+    initView();
+
+    // Hide the Action bar (on all "Authentication" activities)
+    getSupportActionBar().hide();
+  }
+
+  /**
+   * Handle the Confirmation Dialog cancel action
+   */
+  public void onConfirmationDialogCancel() {
+    // TODO: Is there anything to do?
+  }
+
+  /**
+   * Handle the Confirmation Dialog confirm action
+   */
+  public void onConfirmationDialogConfirm() {
+    // Close the activity (cancel action)
+    Intent intent = new Intent();
+    setResult(RESULT_CANCELED, intent);
+    finish();
+  }
+
+  /**
+   * Display the Cancel Request confirmation dialog when the Back button is pressed
+   */
+  @Override
+  public void onBackPressed() {
+    // Display the Cancel Request confirmation dialog
+    mCancelRequestDialog.show();
+  }
+
+  /**
+   * Initialize the UI components
+   */
+  private void initView() {
     // Email input
     mEmailInput = (EditText) findViewById(R.id.email_input);
     mEmailViewLayout = (TextInputLayout) findViewById(R.id.email_layout);
@@ -94,35 +130,6 @@ public class RequestPasswordResetActivity extends AppCompatActivity {
     // Progress dialog
     mProgressDialog = new ProgressDialog(this);
     mProgressDialog.setMessage(getString(R.string.progress_message_request_password_reset));
-
-    // Hide the Action bar (on all "Authentication" activities)
-    getSupportActionBar().hide();
-  }
-
-  /**
-   * Handle the Confirmation Dialog cancel action
-   */
-  public void onConfirmationDialogCancel() {
-    // TODO: Is there anything to do?
-  }
-
-  /**
-   * Handle the Confirmation Dialog confirm action
-   */
-  public void onConfirmationDialogConfirm() {
-    // Close the activity (cancel action)
-    Intent intent = new Intent();
-    setResult(RESULT_CANCELED, intent);
-    finish();
-  }
-
-  /**
-   * Display the Cancel Request confirmation dialog when the Back button is pressed
-   */
-  @Override
-  public void onBackPressed() {
-    // Display the Cancel Request confirmation dialog
-    mCancelRequestDialog.show();
   }
 
   /**

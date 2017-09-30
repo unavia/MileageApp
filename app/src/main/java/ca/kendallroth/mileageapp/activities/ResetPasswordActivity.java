@@ -50,6 +50,9 @@ public class ResetPasswordActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_reset_password);
 
+    // Intialize the UI Components
+    initView();
+
     // Get the email associated with the password reset
     Intent intent = getIntent();
     mEmailAccount = intent.getStringExtra("emailAccount");
@@ -62,6 +65,14 @@ public class ResetPasswordActivity extends AppCompatActivity {
       finish();
     }
 
+    // Hide the Action bar (on all "Authentication" activities)
+    getSupportActionBar().hide();
+  }
+
+  /**
+   * Initialize the UI Components
+   */
+  private void initView() {
     // Email input (for display only)
     mEmailView = (TextView) findViewById(R.id.email_text);
     mEmailView.setText(String.format("%s: %s", getString(R.string.label_password_reset), mEmailAccount));
@@ -88,8 +99,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
     mProgressDialog = new ProgressDialog(this);
     mProgressDialog.setMessage(getString(R.string.progress_message_reset_password));
 
-    // Hide the Action bar (on all "Authentication" activities)
-    getSupportActionBar().hide();
   }
 
   /**
@@ -119,14 +128,14 @@ public class ResetPasswordActivity extends AppCompatActivity {
       cancel = true;
     } else if (!AccountUtils.validatePasswordConfirm(password, passwordConfirm)) {
       mPasswordViewLayout.setError(getString(R.string.error_mismatching_passwords));
-      focusView = mPasswordInput;
+      focusView = mPasswordConfirmInput;
       cancel = true;
     }
 
     // Check for a valid password
     if (TextUtils.isEmpty(password)) {
       mPasswordViewLayout.setError(getString(R.string.error_field_required));
-      focusView = mPasswordConfirmInput;
+      focusView = mPasswordInput;
       cancel = true;
     } else if (!AccountUtils.validatePassword(password)) {
       mPasswordViewLayout.setError(getString(R.string.error_invalid_password));
