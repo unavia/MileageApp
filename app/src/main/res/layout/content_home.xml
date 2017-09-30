@@ -14,7 +14,7 @@
     <ImageView
         android:id="@+id/logo"
         android:contentDescription="@string/content_app_logo"
-        android:src="@drawable/logo_circle"
+        android:src="@drawable/logo_circle_clear"
         android:layout_width="wrap_content"
         android:layout_height="72dp"
         android:layout_marginBottom="24dp"
