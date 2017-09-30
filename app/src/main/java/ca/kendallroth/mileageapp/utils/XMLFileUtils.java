@@ -56,7 +56,5 @@ public abstract class XMLFileUtils {
     XMLWriter writer = new XMLWriter(fos, format);
     writer.write(document);
     writer.close();
-
-    return;
   }
 }

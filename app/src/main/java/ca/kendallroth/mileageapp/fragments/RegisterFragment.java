@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -252,9 +253,15 @@ public class RegisterFragment extends Fragment implements ClearableFragment {
       // Ignore create attempt (due to error) and set focus to last field with error
       focusView.requestFocus();
     } else {
+      // Hide the soft keyboard
+      View view = getActivity().getCurrentFocus();
+      if (view != null) {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+      }
+
       // Show a progress spinner and start a background task to perform the account creation attempt
       mProgressDialog.show();
-
       mAuthTask = new CreateAccountTask(email, name, password);
       mAuthTask.execute((Void) null);
     }
@@ -333,6 +340,9 @@ public class RegisterFragment extends Fragment implements ClearableFragment {
 
       if (success) {
         // NOTE: Determine what to do on successful account creation (likely send email)
+
+        // Clear the form
+        clearInputs();
 
         // TODO: Account creation should happen in parent
         if (mAccountCreateListener != null) {

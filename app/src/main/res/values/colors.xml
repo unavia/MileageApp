@@ -6,6 +6,7 @@
     <color name="primaryText">#212121</color>
 
     <!-- Account page colours -->
+    <color name="account_disabled">#BEEDF4</color>
     <color name="account_primaryText">#FFFFFF</color>
     <color name="account_secondaryText">#BEEDF4</color>
     <color name="account_tab_group_underline">#44CEE0</color>

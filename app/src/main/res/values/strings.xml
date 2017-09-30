@@ -1,9 +1,24 @@
 <resources>
     <string name="app_name">MileageApp</string>
 
+    <!-- Button text -->
     <string name="button_create_account">Create Account</string>
     <string name="button_login">Login</string>
+    <string name="button_request_password_reset">Request Reset</string>
+    <string name="button_reset_password">Reset Password</string>
 
+    <!-- Content Descriptions ("alt") tags -->
+    <string name="content_app_logo">App Logo</string>
+
+    <string name="cancelled_request_password_reset">Password reset cancelled</string>
+
+    <!-- Dialog text -->
+    <string name="dialog_message_request_password_reset">Cancel the password reset request?</string>
+    <string name="dialog_negative_request_password_reset">No</string>
+    <string name="dialog_positive_request_password_reset">Yes</string>
+    <string name="dialog_title_request_password_reset">Cancel Reset Request?</string>
+
+    <!-- Error messages -->
     <string name="error_account_already_exists">An account with this email already exists</string>
     <string name="error_field_required">This field is required</string>
     <string name="error_incorrect_password">This password is incorrect</string>
@@ -11,22 +26,42 @@
     <string name="error_invalid_name">This name is too short</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_mismatching_passwords">These passwords do not match</string>
+    <string name="error_reset_password_invalid_email">No account with this email</string>
 
+    <!-- Operation failure messages -->
     <string name="failure_create_account">Account creation failed</string>
     <string name="failure_login">Login failed</string>
+    <string name="failure_request_password_reset">Password reset request failed</string>
+    <string name="failure_reset_password">Password reset failed</string>
 
+    <!-- Hint text messages -->
     <string name="hint_email">Email</string>
     <string name="hint_name">Name</string>
     <string name="hint_password">Password</string>
     <string name="hint_password_confirm">Confirm Password</string>
 
+    <string name="label_password_reset">Password reset for</string>
+
+    <!-- Operation success messages -->
     <string name="success_create_account">Account created</string>
     <string name="success_login">Login succeeded</string>
+    <string name="success_request_password_reset">Password reset requested</string>
+    <string name="success_reset_password">Password reset successfully</string>
 
+    <!-- Operation progress messages -->
     <string name="progress_message_create_account">Creating Account</string>
     <string name="progress_message_login_attempt">Logging in</string>
+    <string name="progress_message_request_password_reset">Requesting Password Reset</string>
+    <string name="progress_message_reset_password">Resetting Password</string>
 
+    <!-- Pseudo-button text -->
+    <string name="prompt_cancel">Cancel</string>
     <string name="prompt_create_account">No account? Create one</string>
+    <string name="prompt_forgot_password">Forgot password?</string>
     <string name="prompt_login">Already have an account? Login</string>
+
+    <!-- Activity titles -->
     <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_request_password_reset">Forgot Password</string>
+    <string name="title_activity_reset_password">Reset Password</string>
 </resources>
