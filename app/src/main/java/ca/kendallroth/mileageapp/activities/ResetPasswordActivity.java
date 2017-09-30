@@ -119,14 +119,14 @@ public class ResetPasswordActivity extends AppCompatActivity {
       cancel = true;
     } else if (!AccountUtils.validatePasswordConfirm(password, passwordConfirm)) {
       mPasswordViewLayout.setError(getString(R.string.error_mismatching_passwords));
-      focusView = mPasswordInput;
+      focusView = mPasswordConfirmInput;
       cancel = true;
     }
 
     // Check for a valid password
     if (TextUtils.isEmpty(password)) {
       mPasswordViewLayout.setError(getString(R.string.error_field_required));
-      focusView = mPasswordConfirmInput;
+      focusView = mPasswordInput;
       cancel = true;
     } else if (!AccountUtils.validatePassword(password)) {
       mPasswordViewLayout.setError(getString(R.string.error_invalid_password));
