@@ -64,4 +64,7 @@
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_activity_request_password_reset">Forgot Password</string>
     <string name="title_activity_reset_password">Reset Password</string>
+    <string name="title_app">MileageApp</string>
+
+    <string name="text_app_message">This app was developed with the intention of simplifying the process of tracking gas mileage (efficiency) per hand. As the owner of a 2003 Corolla, I know firsthand the annoyance caused by not having a electronic means of tracking my mileage, so I decided to create an app to hopefully streamline the process.</string>
 </resources>
