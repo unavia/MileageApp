@@ -3,6 +3,7 @@ package ca.kendallroth.mileageapp.activities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -28,7 +29,7 @@ import ca.kendallroth.mileageapp.utils.XMLFileUtils;
 /**
  * Request password reset activity that enables a user to request a password reset
  */
-public class RequestPasswordReset extends AppCompatActivity {
+public class RequestPasswordResetActivity extends AppCompatActivity {
 
   // UI Elements
   private AlertDialog mCancelRequestDialog;
@@ -39,7 +40,7 @@ public class RequestPasswordReset extends AppCompatActivity {
   private ProgressDialog mProgressDialog;
 
   // Login asynchronous task
-  private RequestPasswordResetTask mAuthTask = null;
+  private RequestPasswordResetTask mRequestPasswordResetTask = null;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +111,8 @@ public class RequestPasswordReset extends AppCompatActivity {
    */
   public void onConfirmationDialogConfirm() {
     // Close the activity (cancel action)
+    Intent intent = new Intent();
+    setResult(RESULT_CANCELED, intent);
     finish();
   }
 
@@ -123,18 +126,18 @@ public class RequestPasswordReset extends AppCompatActivity {
   }
 
   /**
-   * Attempts to request a password reset for the account specified by the login form. If there are
+   * Attempts to request a password reset for the account specified by the reset request form. If there are
    *  form errors the errors are presented and no attempt is made.
    */
   private void attemptPasswordResetRequest() {
-    if (mAuthTask != null) {
+    if (mRequestPasswordResetTask != null) {
       return;
     }
 
     // Reset errors.
     mEmailViewLayout.setError(null);
 
-    // Store values at the time of the login attempt.
+    // Store values at the time of the password reset request attempt.
     String email = mEmailInput.getText().toString();
 
     boolean cancel = false;
@@ -164,8 +167,8 @@ public class RequestPasswordReset extends AppCompatActivity {
 
       // Show a progress spinner, and kick off a background task to perform the password reset request.
       mProgressDialog.show();
-      mAuthTask = new RequestPasswordResetTask(email);
-      mAuthTask.execute((Void) null);
+      mRequestPasswordResetTask = new RequestPasswordResetTask(email);
+      mRequestPasswordResetTask.execute((Void) null);
     }
   }
 
@@ -217,6 +220,7 @@ public class RequestPasswordReset extends AppCompatActivity {
         for (Node user : users) {
           if (user.valueOf("@email").equals(mEmail)) {
             validResetRequestEmail = true;
+            break;
           }
         }
 
@@ -237,14 +241,25 @@ public class RequestPasswordReset extends AppCompatActivity {
 
     @Override
     protected void onPostExecute(final Boolean success) {
-      mAuthTask = null;
+      mRequestPasswordResetTask = null;
       mProgressDialog.dismiss();
 
+      // Pass the email associated with the password reset request back to the parent Activity
+      Intent intent = new Intent();
+      intent.putExtra("emailAccount", mEmail);
+
       if (success) {
-        // TODO: Indicate the success of the reset request
+        // Finish the activity and send the result back to the parent Activity
+        setResult(RESULT_OK, intent);
+        finish();
       } else {
         // TODO: Indicate that the reset request has failed (ie. not been sent)
+
+        mEmailViewLayout.setError(getString(R.string.error_reset_password_invalid_email));
+        mEmailInput.requestFocus();
       }
+
+      // NOTE: This won't display if the Activity exists at `finish()` above.
 
       // Use the android "content" layout as the snackbar anchor
       View snackbarRoot = findViewById(android.R.id.content);
@@ -259,7 +274,7 @@ public class RequestPasswordReset extends AppCompatActivity {
 
     @Override
     protected void onCancelled() {
-      mAuthTask = null;
+      mRequestPasswordResetTask = null;
       mProgressDialog.dismiss();
     }
   }

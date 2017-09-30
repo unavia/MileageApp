@@ -22,7 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.RequestPasswordReset">
+        <activity android:name=".activities.RequestPasswordResetActivity">
+        </activity>
+        <activity android:name=".activities.ResetPasswordActivity">
         </activity>
     </application>
 
