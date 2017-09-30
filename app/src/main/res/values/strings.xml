@@ -40,6 +40,8 @@
     <string name="hint_password">Password</string>
     <string name="hint_password_confirm">Confirm Password</string>
 
+    <string name="label_password_reset">Password reset for</string>
+
     <!-- Operation success messages -->
     <string name="success_create_account">Account created</string>
     <string name="success_login">Login succeeded</string>

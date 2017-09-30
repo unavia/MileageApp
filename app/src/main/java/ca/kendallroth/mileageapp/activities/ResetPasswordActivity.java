@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -26,20 +26,18 @@ import ca.kendallroth.mileageapp.R;
 import ca.kendallroth.mileageapp.utils.AccountUtils;
 import ca.kendallroth.mileageapp.utils.XMLFileUtils;
 
-import static android.text.InputType.TYPE_NULL;
-
 /**
  * Reset password activity that enables a user to reset their password
  */
 public class ResetPasswordActivity extends AppCompatActivity {
 
   private Button mResetPasswordButton;
-  private EditText mEmailInput;
   private EditText mPasswordInput;
   private EditText mPasswordConfirmInput;
   private ProgressDialog mProgressDialog;
   private TextInputLayout mPasswordViewLayout;
   private TextInputLayout mPasswordConfirmViewLayout;
+  private TextView mEmailView;
 
   // Email address that sent the request
   private String mEmailAccount;
@@ -65,9 +63,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
     }
 
     // Email input (for display only)
-    mEmailInput = (EditText) findViewById(R.id.email_input);
-    mEmailInput.setText(mEmailAccount);
-    mEmailInput.setInputType(TYPE_NULL);
+    mEmailView = (TextView) findViewById(R.id.email_text);
+    mEmailView.setText(String.format("%s: %s", getString(R.string.label_password_reset), mEmailAccount));
 
     // Password input
     mPasswordInput = (EditText) findViewById(R.id.password_input);
