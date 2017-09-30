@@ -63,7 +63,7 @@ public class LoginFragment extends Fragment implements ClearableFragment, Scroll
 
   private String mTitle;
 
-  private LoginAttemptListener mLoginAttemptListener;
+  private ILoginAttemptListener mILoginAttemptListener;
 
   // Login asynchronous task
   private LoginTask mAuthTask = null;
@@ -88,7 +88,7 @@ public class LoginFragment extends Fragment implements ClearableFragment, Scroll
    *  communicated with the fragment.
    *  Example: "http://developer.android.com/training/basics/fragments/communicating.html"
    */
-  public interface LoginAttemptListener {
+  public interface ILoginAttemptListener {
     /**
      * Trigger a login attempt response
      * @param success Whether login attempt was successful
@@ -99,8 +99,6 @@ public class LoginFragment extends Fragment implements ClearableFragment, Scroll
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    Log.d("MileageApp", "LoginFragment.onCreate");
 
     if (getArguments() != null) {
       mTitle = getArguments().getString(ARG_TITLE);
@@ -113,7 +111,7 @@ public class LoginFragment extends Fragment implements ClearableFragment, Scroll
     View loginView = inflater.inflate(R.layout.fragment_login, container, false);
 
     // Initialize the view and variables
-    this.initView(loginView);
+    initView(loginView);
 
     return loginView;
   }
@@ -123,10 +121,10 @@ public class LoginFragment extends Fragment implements ClearableFragment, Scroll
     super.onAttach(context);
 
     // Verify that the interface was properly implemented in the Activity
-    if (context instanceof LoginAttemptListener) {
-      mLoginAttemptListener = (LoginAttemptListener) context;
+    if (context instanceof ILoginAttemptListener) {
+      mILoginAttemptListener = (ILoginAttemptListener) context;
     } else {
-      throw new RuntimeException(context.toString() + " must implement LoginAttemptListener");
+      throw new RuntimeException(context.toString() + " must implement ILoginAttemptListener");
     }
   }
 
@@ -134,7 +132,7 @@ public class LoginFragment extends Fragment implements ClearableFragment, Scroll
   public void onDetach() {
     super.onDetach();
 
-    mLoginAttemptListener = null;
+    mILoginAttemptListener = null;
   }
 
   /**
@@ -445,7 +443,7 @@ public class LoginFragment extends Fragment implements ClearableFragment, Scroll
 
       if (success) {
         // Indicate the success of the login attempt in the parent callback
-        mLoginAttemptListener.onLoginAttempt(true);
+        mILoginAttemptListener.onLoginAttempt(true);
       } else {
         mPasswordViewLayout.setError(getString(R.string.error_incorrect_password));
         mPasswordInput.requestFocus();

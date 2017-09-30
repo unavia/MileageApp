@@ -24,16 +24,12 @@
     public ContentSwitcher(Context context) {
       super(context);
 
-      Log.d("MileageApp", "ca.kendallroth.mileageapp.components.ContentSwitcher initialized");
-
       init(context);
     }
 
     // Constructor called by XML creation
     public ContentSwitcher(Context context, AttributeSet attributes) {
       super(context, attributes);
-
-      Log.d("MileageApp", "ca.kendallroth.mileageapp.components.ContentSwitcher initialized (2)");
 
       init(context);
     }
@@ -44,7 +40,6 @@
      */
     private void init(Context context) {
       LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
       inflater.inflate(R.layout.control_content_switcher, this);
 
       // Initialize UI components
