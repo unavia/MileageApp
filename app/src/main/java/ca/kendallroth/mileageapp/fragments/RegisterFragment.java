@@ -53,7 +53,7 @@ public class RegisterFragment extends Fragment implements ClearableFragment {
 
   private String mTitle;
 
-  private AccountCreateListener mAccountCreateListener;
+  private IAccountCreateListener mIAccountCreateListener;
 
   public RegisterFragment() {
     // Required empty public constructor
@@ -75,7 +75,7 @@ public class RegisterFragment extends Fragment implements ClearableFragment {
    *  communicated with the fragment.
    *  Example: "http://developer.android.com/training/basics/fragments/communicating.html"
    */
-  public interface AccountCreateListener {
+  public interface IAccountCreateListener {
     /**
      * Trigger an account creation process (only requested after account information has been validated)
      * @param email    Account email
@@ -87,8 +87,6 @@ public class RegisterFragment extends Fragment implements ClearableFragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    Log.d("MileageApp", "RegisterFragment.onCreate");
 
     if (getArguments() != null) {
       mTitle = getArguments().getString(ARG_TITLE);
@@ -111,10 +109,10 @@ public class RegisterFragment extends Fragment implements ClearableFragment {
     super.onAttach(context);
 
     // Verify that the interface was properly implemented in the Activity
-    if (context instanceof AccountCreateListener) {
-      mAccountCreateListener = (AccountCreateListener) context;
+    if (context instanceof IAccountCreateListener) {
+      mIAccountCreateListener = (IAccountCreateListener) context;
     } else {
-      throw new RuntimeException(context.toString() + " must implement AccountCreateListener");
+      throw new RuntimeException(context.toString() + " must implement IAccountCreateListener");
     }
   }
 
@@ -122,7 +120,7 @@ public class RegisterFragment extends Fragment implements ClearableFragment {
   public void onDetach() {
     super.onDetach();
 
-    mAccountCreateListener = null;
+    mIAccountCreateListener = null;
   }
 
   /**
@@ -345,9 +343,9 @@ public class RegisterFragment extends Fragment implements ClearableFragment {
         clearInputs();
 
         // TODO: Account creation should happen in parent
-        if (mAccountCreateListener != null) {
+        if (mIAccountCreateListener != null) {
           // Set parent Activity to Login view using callback
-          mAccountCreateListener.onAccountCreateRequest(mEmail, mPassword);
+          mIAccountCreateListener.onAccountCreateRequest(mEmail, mPassword);
         }
       } else {
         mEmailViewLayout.setError(getString(R.string.error_account_already_exists));

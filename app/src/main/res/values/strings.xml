@@ -14,9 +14,13 @@
 
     <!-- Dialog text -->
     <string name="dialog_message_request_password_reset">Cancel the password reset request?</string>
+    <string name="dialog_message_reset_password">Cancel the password reset?</string>
     <string name="dialog_negative_request_password_reset">No</string>
+    <string name="dialog_negative_reset_password">No</string>
     <string name="dialog_positive_request_password_reset">Yes</string>
+    <string name="dialog_positive_reset_password">Yes</string>
     <string name="dialog_title_request_password_reset">Cancel Reset Request?</string>
+    <string name="dialog_title_reset_password">Cancel Password Reset?</string>
 
     <!-- Error messages -->
     <string name="error_account_already_exists">An account with this email already exists</string>
