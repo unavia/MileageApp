@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:layout_marginTop="80dp"
+    android:layout_marginBottom="30dp"
+    android:paddingLeft="50dp"
+    android:paddingRight="50dp"
+    tools:showIn="@layout/activity_home">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal">
+
+        <!-- Logo (circular) -->
+        <ImageView
+            android:id="@+id/logo"
+            android:contentDescription="@string/content_app_logo"
+            android:src="@drawable/logo_circle_border"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="center_horizontal" />
+
+        <!-- App title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_app"
+            android:textSize="28sp"
+            android:textColor="@color/primaryText"
+            />
+
+    </LinearLayout>
+
+    <!-- App title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_app_message"
+        android:textSize="18sp"
+        android:textColor="@color/primaryText"
+        />
+
+</LinearLayout>

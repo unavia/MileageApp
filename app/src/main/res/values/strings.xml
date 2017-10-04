@@ -14,9 +14,13 @@
 
     <!-- Dialog text -->
     <string name="dialog_message_request_password_reset">Cancel the password reset request?</string>
+    <string name="dialog_message_reset_password">Cancel the password reset?</string>
     <string name="dialog_negative_request_password_reset">No</string>
+    <string name="dialog_negative_reset_password">No</string>
     <string name="dialog_positive_request_password_reset">Yes</string>
+    <string name="dialog_positive_reset_password">Yes</string>
     <string name="dialog_title_request_password_reset">Cancel Reset Request?</string>
+    <string name="dialog_title_reset_password">Cancel Password Reset?</string>
 
     <!-- Error messages -->
     <string name="error_account_already_exists">An account with this email already exists</string>
@@ -64,4 +68,7 @@
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_activity_request_password_reset">Forgot Password</string>
     <string name="title_activity_reset_password">Reset Password</string>
+    <string name="title_app">MileageApp</string>
+
+    <string name="text_app_message">This app was developed with the intention of simplifying the process of tracking gas mileage (efficiency) per hand. As the owner of a 2003 Corolla, I know firsthand the annoyance caused by not having a electronic means of tracking my mileage, so I decided to create an app to hopefully streamline the process.</string>
 </resources>

@@ -2,9 +2,11 @@ package ca.kendallroth.mileageapp.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -31,6 +33,7 @@ import ca.kendallroth.mileageapp.utils.XMLFileUtils;
  */
 public class ResetPasswordActivity extends AppCompatActivity {
 
+  private AlertDialog mCancelResetDialog;
   private Button mResetPasswordButton;
   private EditText mPasswordInput;
   private EditText mPasswordConfirmInput;
@@ -50,10 +53,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_reset_password);
 
-    // Intialize the UI Components
-    initView();
-
-    // Get the email associated with the password reset
+    // Get the email associated with the password reset (must be BEFORE `initView()`)
     Intent intent = getIntent();
     mEmailAccount = intent.getStringExtra("emailAccount");
 
@@ -65,8 +65,37 @@ public class ResetPasswordActivity extends AppCompatActivity {
       finish();
     }
 
+    // Intialize the UI Components
+    initView();
+
     // Hide the Action bar (on all "Authentication" activities)
     getSupportActionBar().hide();
+  }
+
+  /**
+   * Handle the Confirmation Dialog cancel action
+   */
+  public void onConfirmationDialogCancel() {
+    // TODO: Is there anything to do?
+  }
+
+  /**
+   * Handle the Confirmation Dialog confirm action
+   */
+  public void onConfirmationDialogConfirm() {
+    // Close the activity (cancel action)
+    Intent intent = new Intent();
+    setResult(RESULT_CANCELED, intent);
+    finish();
+  }
+
+  /**
+   * Display the Cancel Request confirmation dialog when the Back button is pressed
+   */
+  @Override
+  public void onBackPressed() {
+    // Display the Cancel Request confirmation dialog
+    mCancelResetDialog.show();
   }
 
   /**
@@ -94,6 +123,26 @@ public class ResetPasswordActivity extends AppCompatActivity {
         attemptPasswordReset(mEmailAccount);
       }
     });
+
+    // Cancel request dialog
+    mCancelResetDialog = new AlertDialog.Builder(this)
+        .setMessage(getString(R.string.dialog_message_reset_password))
+        .setNegativeButton(R.string.dialog_negative_reset_password, new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialogInterface, int i) {
+            // Close the Confirmation dialog
+            onConfirmationDialogCancel();
+          }
+        })
+        .setPositiveButton(R.string.dialog_positive_reset_password, new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialogInterface, int i) {
+            // Confirm cancelling the change (close activity)
+            onConfirmationDialogConfirm();
+          }
+        })
+        .setTitle(R.string.dialog_title_reset_password)
+        .create();
 
     // Progress dialog
     mProgressDialog = new ProgressDialog(this);
