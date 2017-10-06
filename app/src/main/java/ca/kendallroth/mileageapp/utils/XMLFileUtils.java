@@ -26,8 +26,8 @@ public abstract class XMLFileUtils {
    * @param context   Android context
    * @param fileName  File name (path)
    * @return XML document for DOM4J
-   * @throws FileNotFoundException
-   * @throws DocumentException
+   * @throws FileNotFoundException File was not found
+   * @throws DocumentException     Exception thrown while opening the document
    */
   public static Document getFile(Context context, String fileName) throws FileNotFoundException, DocumentException {
     // Retrieve the specified file and convert it to an XML document for parsing
@@ -43,7 +43,7 @@ public abstract class XMLFileUtils {
    * @param context   Android context
    * @param fileName  File name (path)
    * @param document  DOM4J XML document
-   * @throws IOException
+   * @throws IOException Exception thrown while performing IO operations on the file
    */
   public static void createFile(Context context, String fileName, Document document) throws IOException {
     // Create a file output steam at the specified Android filepath
