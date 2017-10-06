@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">MileageApp</string>
 
+    <!-- Message codes -->
+    <string name="code_failure_file_context">File context not initialized</string>
+    <string name="code_method_not_implemented">Method is not implemented yet</string>
+
     <!-- Button text -->
     <string name="button_create_account">Create Account</string>
     <string name="button_login">Login</string>
@@ -13,12 +17,18 @@
     <string name="cancelled_request_password_reset">Password reset cancelled</string>
 
     <!-- Dialog text -->
+    <string name="dialog_button_no">No</string>
+    <string name="dialog_button_yes">Yes</string>
+    <string name="dialog_message_clear_database">Are you sure you want to clear the database?</string>
+    <string name="dialog_message_delete_account">Are you sure you want to delete your account?</string>
     <string name="dialog_message_request_password_reset">Cancel the password reset request?</string>
     <string name="dialog_message_reset_password">Cancel the password reset?</string>
     <string name="dialog_negative_request_password_reset">No</string>
     <string name="dialog_negative_reset_password">No</string>
     <string name="dialog_positive_request_password_reset">Yes</string>
     <string name="dialog_positive_reset_password">Yes</string>
+    <string name="dialog_title_clear_database">Clear Database?</string>
+    <string name="dialog_title_delete_account">Delete Account?</string>
     <string name="dialog_title_request_password_reset">Cancel Reset Request?</string>
     <string name="dialog_title_reset_password">Cancel Password Reset?</string>
 
@@ -33,7 +43,9 @@
     <string name="error_reset_password_invalid_email">No account with this email</string>
 
     <!-- Operation failure messages -->
+    <string name="failure_clear_database">Failed to clear database</string>
     <string name="failure_create_account">Account creation failed</string>
+    <string name="failure_delete_account">Account deletion failed</string>
     <string name="failure_login">Login failed</string>
     <string name="failure_request_password_reset">Password reset request failed</string>
     <string name="failure_reset_password">Password reset failed</string>
@@ -47,7 +59,9 @@
     <string name="label_password_reset">Password reset for</string>
 
     <!-- Operation success messages -->
+    <string name="success_clear_database">Database cleared</string>
     <string name="success_create_account">Account created</string>
+    <string name="success_delete_account">Account deleted</string>
     <string name="success_login">Login succeeded</string>
     <string name="success_request_password_reset">Password reset requested</string>
     <string name="success_reset_password">Password reset successfully</string>
@@ -71,4 +85,14 @@
     <string name="title_app">MileageApp</string>
 
     <string name="text_app_message">This app was developed with the intention of simplifying the process of tracking gas mileage (efficiency) per hand. As the owner of a 2003 Corolla, I know firsthand the annoyance caused by not having a electronic means of tracking my mileage, so I decided to create an app to hopefully streamline the process.</string>
+
+    <!-- Preferences -->
+    <string name="pref_category_developer_options">Developer Options</string>
+    <string name="pref_category_key_developer">category_developer</string>
+    <string name="pref_key_clear_db">clear_db</string>
+    <string name="pref_key_delete_account">delete_account</string>
+    <string name="pref_summary_clear_db">Clear the database (developer)</string>
+    <string name="pref_summary_delete_account">Delete user account (developer)</string>
+    <string name="pref_title_clear_db">Clear Database</string>
+    <string name="pref_title_delete_account">Delete Account</string>
 </resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/pref_category_developer_options"
+        android:key="@string/pref_category_key_developer">
+        <Preference
+            android:key="@string/pref_key_delete_account"
+            android:summary="@string/pref_summary_delete_account"
+            android:title="@string/pref_title_delete_account"/>
+        <Preference
+            android:key="@string/pref_key_clear_db"
+            android:summary="@string/pref_summary_clear_db"
+            android:title="@string/pref_title_clear_db"/>
+    </PreferenceCategory>
+</PreferenceScreen>

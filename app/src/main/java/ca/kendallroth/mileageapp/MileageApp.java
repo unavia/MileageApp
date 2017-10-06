@@ -1,12 +1,15 @@
 package ca.kendallroth.mileageapp;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
+import ca.kendallroth.mileageapp.utils.AuthUtils;
+import ca.kendallroth.mileageapp.utils.Response;
 import ca.kendallroth.mileageapp.utils.XMLFileUtils;
 
 /**
@@ -15,6 +18,13 @@ import ca.kendallroth.mileageapp.utils.XMLFileUtils;
  */
 public class MileageApp extends Application {
 
+  // Expose the app context
+  private static Context appContext;
+
+  public static Context getContext() {
+    return appContext;
+  }
+
   public MileageApp() {
     super();
   }
@@ -22,6 +32,12 @@ public class MileageApp extends Application {
   @Override
   public void onCreate() {
     super.onCreate();
+
+    // Set the static app context (to enable access from "outside" files)
+    appContext = getBaseContext();
+
+    // Set the Authentication file context
+    AuthUtils.fileContext = getBaseContext();
 
     // Check for the authentication file or create if it doesn't exist
     checkAuthenticationFile();
@@ -38,23 +54,10 @@ public class MileageApp extends Application {
     }
 
     // Create the authentication file
-    try {
-      Document outputDocument = DocumentHelper.createDocument();
-      Element root = outputDocument.addElement("users");
+    Response createAuthFileResponse = AuthUtils.createAuthFile();
 
-      // Add the initial user
-      root.addElement("user")
-          .addAttribute("email", "kendall@example.com")
-          .addAttribute("name", "Example User")
-          .addAttribute("password", "hello");
-
-      // Create the XML file
-      XMLFileUtils.createFile(getBaseContext(), XMLFileUtils.USERS_FILE_NAME, outputDocument);
-
-      Log.d("MileageApp", "Users file created with sample user");
-    } catch(Exception e) {
-      Log.e("MileageApp", "XML file creation failed");
-    }
+    // TODO: Do something with response
+    Log.d("MileageApp.auth", String.format("checkAuthenticationFile response: %s", createAuthFileResponse.toString()));
   }
 
   /**
