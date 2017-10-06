@@ -14,7 +14,7 @@ import ca.kendallroth.mileageapp.fragments.RegisterFragment;
 import ca.kendallroth.mileageapp.fragments.RegisterFragment.IAccountCreateListener;
 import ca.kendallroth.mileageapp.R;
 import ca.kendallroth.mileageapp.components.ContentSwitcher;
-import ca.kendallroth.mileageapp.tab_adapters.AccountTabAdapter;
+import ca.kendallroth.mileageapp.adapters.AccountTabAdapter;
 
 /**
  * Authorization activity that displays Login and Register workflows in a ViewPager
