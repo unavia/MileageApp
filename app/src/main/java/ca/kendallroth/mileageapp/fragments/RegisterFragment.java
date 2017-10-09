@@ -8,20 +8,17 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.Node;
-
-import java.util.List;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import ca.kendallroth.mileageapp.R;
 import ca.kendallroth.mileageapp.utils.AccountUtils;
@@ -29,7 +26,6 @@ import ca.kendallroth.mileageapp.utils.AuthUtils;
 import ca.kendallroth.mileageapp.utils.ClearableFragment;
 import ca.kendallroth.mileageapp.utils.Response;
 import ca.kendallroth.mileageapp.utils.StatusCode;
-import ca.kendallroth.mileageapp.utils.XMLFileUtils;
 
 /**
  * Fragment for enabling a user to register for the app
@@ -41,10 +37,10 @@ public class RegisterFragment extends Fragment implements ClearableFragment {
 
   // UI references.
   private Button mCreateAccountButton;
-  private EditText mEmailView;
-  private EditText mNameView;
-  private EditText mPasswordView;
-  private EditText mPasswordConfirmView;
+  private EditText mEmailInput;
+  private EditText mNameInput;
+  private EditText mPasswordInput;
+  private EditText mPasswordConfirmInput;
   private TextInputLayout mEmailViewLayout;
   private TextInputLayout mNameViewLayout;
   private TextInputLayout mPasswordViewLayout;
@@ -132,20 +128,32 @@ public class RegisterFragment extends Fragment implements ClearableFragment {
    */
   private void initView(View createAccountView) {
     // Email field
-    mEmailView = (EditText) createAccountView.findViewById(R.id.email_input);
+    mEmailInput = (EditText) createAccountView.findViewById(R.id.email_input);
     mEmailViewLayout = (TextInputLayout) createAccountView.findViewById(R.id.email_layout);
 
     // Name field
-    mNameView = (EditText) createAccountView.findViewById(R.id.name_input);
+    mNameInput = (EditText) createAccountView.findViewById(R.id.name_input);
     mNameViewLayout = (TextInputLayout) createAccountView.findViewById(R.id.name_layout);
 
     // Password field
-    mPasswordView = (EditText) createAccountView.findViewById(R.id.password_input);
+    mPasswordInput = (EditText) createAccountView.findViewById(R.id.password_input);
     mPasswordViewLayout = (TextInputLayout) createAccountView.findViewById(R.id.password_layout);
 
     // Password confirmation field
-    mPasswordConfirmView = (EditText) createAccountView.findViewById(R.id.password_confirm_input);
+    mPasswordConfirmInput = (EditText) createAccountView.findViewById(R.id.password_confirm_input);
     mPasswordConfirmViewLayout = (TextInputLayout) createAccountView.findViewById(R.id.password_confirm_layout);
+    mPasswordConfirmInput.setOnEditorActionListener(new OnEditorActionListener() {
+      @Override
+      public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        // Attempt registering on <Enter> keypress while the Confirm Password has focus
+        if (actionId == R.id.password_confirm_input || actionId == EditorInfo.IME_NULL) {
+          doAccountCreate();
+          return true;
+        }
+
+        return false;
+      }
+    });
 
     // Create account button
     mCreateAccountButton = (Button) createAccountView.findViewById(R.id.create_account_button);
@@ -166,17 +174,17 @@ public class RegisterFragment extends Fragment implements ClearableFragment {
    * Clear the inputs and errors
    */
   public void clearInputs() {
-    mEmailView.setText("");
+    mEmailInput.setText("");
     mEmailViewLayout.setError(null);
-    mEmailView.requestFocus();
+    mEmailInput.requestFocus();
 
-    mNameView.setText("");
+    mNameInput.setText("");
     mNameViewLayout.setError(null);
 
-    mPasswordView.setText("");
+    mPasswordInput.setText("");
     mPasswordViewLayout.setError(null);
 
-    mPasswordConfirmView.setText("");
+    mPasswordConfirmInput.setText("");
     mPasswordConfirmViewLayout.setError(null);
   }
 
@@ -196,10 +204,10 @@ public class RegisterFragment extends Fragment implements ClearableFragment {
     mPasswordConfirmViewLayout.setError(null);
 
     // Store values at the time of the login attempt.
-    String email = mEmailView.getText().toString();
-    String name = mNameView.getText().toString();
-    String password = mPasswordView.getText().toString();
-    String passwordConfirm = mPasswordConfirmView.getText().toString();
+    String email = mEmailInput.getText().toString();
+    String name = mNameInput.getText().toString();
+    String password = mPasswordInput.getText().toString();
+    String passwordConfirm = mPasswordConfirmInput.getText().toString();
 
     boolean cancel = false;
     View focusView = null;
@@ -207,46 +215,46 @@ public class RegisterFragment extends Fragment implements ClearableFragment {
     // Check for a valid password confirmation (must match), if the user entered one.
     if (TextUtils.isEmpty(password)) {
       mPasswordConfirmViewLayout.setError(getString(R.string.error_field_required));
-      focusView = mPasswordConfirmView;
+      focusView = mPasswordConfirmInput;
       cancel = true;
     }
     else if (!AccountUtils.validatePasswordConfirm(password, passwordConfirm)) {
       mPasswordConfirmViewLayout.setError(getString(R.string.error_mismatching_passwords));
-      focusView = mPasswordConfirmView;
+      focusView = mPasswordConfirmInput;
       cancel = true;
     }
 
     // Check for a valid password, if the user entered one.
     if (TextUtils.isEmpty(password)) {
       mPasswordViewLayout.setError(getString(R.string.error_field_required));
-      focusView = mPasswordView;
+      focusView = mPasswordInput;
       cancel = true;
     }
     else if (!AccountUtils.validatePassword(password)) {
       mPasswordViewLayout.setError(getString(R.string.error_invalid_password));
-      focusView = mPasswordView;
+      focusView = mPasswordInput;
       cancel = true;
     }
 
     // Check for a valid email address
     if (TextUtils.isEmpty(email)) {
       mEmailViewLayout.setError(getString(R.string.error_field_required));
-      focusView = mEmailView;
+      focusView = mEmailInput;
       cancel = true;
     } else if (!AccountUtils.validateEmail(email)) {
       mEmailViewLayout.setError(getString(R.string.error_invalid_email));
-      focusView = mEmailView;
+      focusView = mEmailInput;
       cancel = true;
     }
 
     // Check for a valid name (is last to set focus properly).
     if (TextUtils.isEmpty(name)) {
       mNameViewLayout.setError(getString(R.string.error_field_required));
-      focusView = mNameView;
+      focusView = mNameInput;
       cancel = true;
     } else if (!AccountUtils.validateName(name)) {
       mNameViewLayout.setError(getString(R.string.error_invalid_name));
-      focusView = mNameView;
+      focusView = mNameInput;
       cancel = true;
     }
 
