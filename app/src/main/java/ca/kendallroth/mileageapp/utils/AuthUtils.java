@@ -212,7 +212,57 @@ public abstract class AuthUtils {
   public static Response updateAuthUserPassword(String email, String newPassword, String oldPassword) {
     if (fileContext == null) return invalidFileContext;
 
-    return new Response(null, MileageApp.getContext().getString(R.string.code_method_not_implemented));
+    Document document;
+    StatusCode responseStatus = null;
+    String responseString = "";
+
+    try {
+      // Read XML file with user information
+      document = XMLFileUtils.getFile(fileContext, XMLFileUtils.USERS_FILE_NAME);
+
+      // Select all the "user" nodes in the document
+      List<Node> users = document.selectNodes("/users/user");
+
+      // Verify that the requested user email exists and the old password is correct
+      for (Node user : users) {
+        if (user.valueOf("@email").equals(email)) {
+          if (user.valueOf("@password").equals(oldPassword)) {
+            // Update the password
+            Element userElement = (Element) user;
+            userElement.addAttribute("password", newPassword);
+
+            // Write the updated file
+            XMLFileUtils.createFile(fileContext, XMLFileUtils.USERS_FILE_NAME, document);
+
+            responseStatus = StatusCode.SUCCESS;
+            responseString = "code_success_password_reset";
+          } else {
+            // Handle incorrect old password
+            responseStatus = StatusCode.ERROR;
+            responseString = "code_failure_password_reset_invalid_password";
+          }
+
+          break;
+        }
+      }
+
+      // Set a warning status if the requested account (email) was not found
+      if (responseStatus == null) {
+        responseStatus = StatusCode.ERROR;
+        responseString = "code_warning_password_reset_account_not_found";
+      }
+
+      String resetStatus = responseStatus == StatusCode.SUCCESS ? "was successful" : "did not complete (no account)";
+      Log.d("MileageApp.auth", String.format("Password reset for email '%s' %s", email, resetStatus));
+    } catch (Exception e) {
+      // Return a failure status (no match) if the file parsing fails or throws an exception
+      responseStatus = StatusCode.FAILURE;
+      responseString = "code_failure_password_reset_file_parse";
+
+      Log.d("MileageApp.auth", String.format("Password reset for email '%s' failed with a file parsing error", email));
+    }
+
+    return new Response(responseStatus, responseString);
   }
 
 
@@ -222,7 +272,7 @@ public abstract class AuthUtils {
    * @param newPassword User's new password
    * @return Operation response with status and message
    */
-  public static Response UpdateAuthUserPassword(String email, String newPassword) {
+  public static Response setAuthUserPassword(String email, String newPassword) {
     if (fileContext == null) return invalidFileContext;
 
     Document document;
@@ -254,7 +304,7 @@ public abstract class AuthUtils {
 
       // Set a warning status if the requested account (email) was not found
       if (responseStatus == null) {
-        responseStatus = StatusCode.WARNING;
+        responseStatus = StatusCode.ERROR;
         responseString = "code_warning_password_reset_account_not_found";
       }
 

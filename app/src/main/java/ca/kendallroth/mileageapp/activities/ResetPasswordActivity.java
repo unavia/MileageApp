@@ -29,6 +29,9 @@ import java.util.List;
 
 import ca.kendallroth.mileageapp.R;
 import ca.kendallroth.mileageapp.utils.AccountUtils;
+import ca.kendallroth.mileageapp.utils.AuthUtils;
+import ca.kendallroth.mileageapp.utils.Response;
+import ca.kendallroth.mileageapp.utils.StatusCode;
 import ca.kendallroth.mileageapp.utils.XMLFileUtils;
 
 /**
@@ -263,39 +266,11 @@ public class ResetPasswordActivity extends AppCompatActivity {
         return false;
       }
 
-      Document document;
+      // Reset the user's password
+      Response resetPasswordResponse = AuthUtils.setAuthUserPassword(mEmail, mPassword);
 
-      try {
-        // Read XML file with user information
-        document = XMLFileUtils.getFile(getBaseContext(), XMLFileUtils.USERS_FILE_NAME);
-
-        // Select all the "user" nodes in the document
-        List<Node> users = document.selectNodes("/users/user");
-
-        boolean passwordResetSuccessful = false;
-
-        // Verify that the requested user email exists (but don't alert if not)
-        for (Node user : users) {
-          if (user.valueOf("@email").equals(mEmail)) {
-            // Update the password
-            Element userElement = (Element) user;
-            userElement.addAttribute("password", mPassword);
-
-            // Write the updated file
-            XMLFileUtils.createFile(getBaseContext(), XMLFileUtils.USERS_FILE_NAME, document);
-
-            passwordResetSuccessful = true;
-            break;
-          }
-        }
-
-        Log.d("MileageApp.auth", String.format("Password reset for email %s", passwordResetSuccessful ? "successful" : "failed"));
-
-        return passwordResetSuccessful;
-      } catch (Exception e) {
-        // Return false (no match) if the file parsing fails or throws an exception
-        return false;
-      }
+      // TODO: Do something with the response
+      return resetPasswordResponse.getStatusCode() == StatusCode.SUCCESS;
     }
 
     @Override

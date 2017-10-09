@@ -303,10 +303,11 @@ public class RegisterFragment extends Fragment implements ClearableFragment {
         return false;
       }
 
+      // Create the new account
       Response createAccountResponse = AuthUtils.addAuthUser(mEmail, mName, mPassword);
 
       // TODO: Do something with the response
-      return createAccountResponse.getStatusCode() == StatusCode.SUCCESS ? true : false;
+      return createAccountResponse.getStatusCode() == StatusCode.SUCCESS;
     }
 
     @Override
