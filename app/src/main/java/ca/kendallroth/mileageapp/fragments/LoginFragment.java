@@ -23,11 +23,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import org.dom4j.Document;
-import org.dom4j.Node;
-
-import java.util.List;
-
 import ca.kendallroth.mileageapp.R;
 import ca.kendallroth.mileageapp.activities.RequestPasswordResetActivity;
 import ca.kendallroth.mileageapp.activities.ResetPasswordActivity;
@@ -37,7 +32,6 @@ import ca.kendallroth.mileageapp.utils.ClearableFragment;
 import ca.kendallroth.mileageapp.utils.Response;
 import ca.kendallroth.mileageapp.utils.ScrollableFragment;
 import ca.kendallroth.mileageapp.utils.StatusCode;
-import ca.kendallroth.mileageapp.utils.XMLFileUtils;
 
 import static android.app.Activity.RESULT_OK;
 
