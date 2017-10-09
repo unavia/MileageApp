@@ -21,18 +21,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.Node;
-
-import java.util.List;
-
 import ca.kendallroth.mileageapp.R;
 import ca.kendallroth.mileageapp.utils.AccountUtils;
 import ca.kendallroth.mileageapp.utils.AuthUtils;
 import ca.kendallroth.mileageapp.utils.Response;
 import ca.kendallroth.mileageapp.utils.StatusCode;
-import ca.kendallroth.mileageapp.utils.XMLFileUtils;
 
 /**
  * Reset password activity that enables a user to reset their password
