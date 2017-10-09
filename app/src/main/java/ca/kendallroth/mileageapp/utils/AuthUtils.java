@@ -80,21 +80,17 @@ public abstract class AuthUtils {
       // Select all the "user" nodes in the document
       List<Node> users = document.selectNodes("/users/user");
 
-      boolean doesUserExist = false;
-
       // Verify that the user email exists
       for (Node user : users) {
         if (user.valueOf("@email").equals(email)) {
-          doesUserExist = true;
+          responseStatus = StatusCode.SUCCESS;
+          responseString = "code_success_find_account";
 
           break;
         }
       }
 
-      if (doesUserExist) {
-        responseStatus = StatusCode.SUCCESS;
-        responseString = "code_success_find_account";
-      } else {
+      if (responseStatus == null) {
         responseStatus = StatusCode.ERROR;
         responseString = "code_error_find_account";
       }
@@ -130,17 +126,13 @@ public abstract class AuthUtils {
       // Select all the "user" nodes in the document
       List<Node> users = document.selectNodes("/users/user");
 
-      boolean doesUserExist = false;
-
       // Verify that the user email and password exists
       for (Node user : users) {
         if (user.valueOf("@email").equals(email)) {
           if (user.valueOf("@password").equals(password)) {
-            doesUserExist = true;
             responseStatus = StatusCode.SUCCESS;
             responseString = "code_success_find_account";
           } else {
-            doesUserExist = false;
             responseStatus = StatusCode.ERROR;
             responseString = "code_error_find_account_invalid_password";
           }
