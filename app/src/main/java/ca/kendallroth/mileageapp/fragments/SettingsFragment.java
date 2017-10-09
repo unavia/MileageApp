@@ -109,7 +109,7 @@ public class SettingsFragment extends PreferenceFragment {
    */
   public void onClearDatabaseCancel() {
     // Close the confirmation dialog
-    mConfirmDatabaseClearDialog.hide();
+    mConfirmDatabaseClearDialog.dismiss();
   }
 
   /**
@@ -137,7 +137,7 @@ public class SettingsFragment extends PreferenceFragment {
    */
   public void onDeleteAccountCancel() {
     // Close the confirmation dialog
-    mConfirmDeleteAccountDialog.hide();
+    mConfirmDeleteAccountDialog.dismiss();
   }
 
   /**
