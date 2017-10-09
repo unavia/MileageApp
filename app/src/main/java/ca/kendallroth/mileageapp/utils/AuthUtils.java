@@ -62,6 +62,55 @@ public abstract class AuthUtils {
 
 
   /**
+   * Check if a user exists in the authentication file
+   * @param email Email identifier
+   * @return Operation response with status and message
+   */
+  public static Response findAuthUser(String email) {
+    if (fileContext == null) return invalidFileContext;
+
+    Document document;
+    StatusCode responseStatus = null;
+    String responseString = "";
+
+    try {
+      // Read XML file with user information
+      document = XMLFileUtils.getFile(fileContext, XMLFileUtils.USERS_FILE_NAME);
+
+      // Select all the "user" nodes in the document
+      List<Node> users = document.selectNodes("/users/user");
+
+      boolean doesUserExist = false;
+
+      // Validate that the user email is unique
+      for (Node user : users) {
+        if (user.valueOf("@email").equals(email)) {
+          doesUserExist = true;
+
+          break;
+        }
+      }
+
+      if (doesUserExist) {
+        responseStatus = StatusCode.SUCCESS;
+        responseString = "code_success_find_account";
+      } else {
+        responseStatus = StatusCode.ERROR;
+        responseString = "code_error_find_account";
+      }
+    } catch (Exception e) {
+      // Handle file exceptions
+      responseStatus = StatusCode.FAILURE;
+      responseString = "code_failure_find_account_file_parse";
+    }
+
+    Log.d("MileageApp.auth", String.format("findAuthUser ('%s'): %s", email, responseString));
+
+    return new Response(responseStatus, responseString);
+  }
+
+
+  /**
    * Add an authenticated user to the auth file
    * @param email    User email
    * @param name     User name

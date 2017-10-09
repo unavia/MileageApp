@@ -20,14 +20,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import org.dom4j.Document;
-import org.dom4j.Node;
-
-import java.util.List;
-
 import ca.kendallroth.mileageapp.R;
 import ca.kendallroth.mileageapp.utils.AccountUtils;
-import ca.kendallroth.mileageapp.utils.XMLFileUtils;
+import ca.kendallroth.mileageapp.utils.AuthUtils;
+import ca.kendallroth.mileageapp.utils.Response;
+import ca.kendallroth.mileageapp.utils.StatusCode;
 
 /**
  * Request password reset activity that enables a user to request a password reset
@@ -225,38 +222,14 @@ public class RequestPasswordResetActivity extends AppCompatActivity {
         return false;
       }
 
-      Document document;
+      // TODO: Enable the user to reset their password
 
-      try {
-        // Read XML file with user information
-        document = XMLFileUtils.getFile(getBaseContext(), XMLFileUtils.USERS_FILE_NAME);
+      // Invalid email requests should appear to behave the same as valid email requests,
+      // so as to not alert an unauthenticated/invalid user that an email doesn't exist (security).
 
-        // Select all the "user" nodes in the document
-        List<Node> users = document.selectNodes("/users/user");
+      Response findUserResponse = AuthUtils.findAuthUser(mEmail);
 
-        boolean validResetRequestEmail = false;
-
-        // Verify that the requested user email exists (but don't alert if not)
-        for (Node user : users) {
-          if (user.valueOf("@email").equals(mEmail)) {
-            validResetRequestEmail = true;
-            break;
-          }
-        }
-
-        Log.d("MileageApp.auth", String.format("Password reset request email %s", validResetRequestEmail ? "found" : "not found"));
-
-        // TODO: Enable the user to reset their password
-
-        // Invalid email requests should appear to behave the same as valid email requests,
-        // so as to not alert an unauthenticated/invalid user that an email doesn't exist (security).
-
-        // NOTE: Temporarily use whether a valid account was requested to route to activity
-        return validResetRequestEmail;
-      } catch (Exception e) {
-        // Return false (no match) if the file parsing fails or throws an exception
-        return false;
-      }
+      return findUserResponse.getStatusCode() == StatusCode.SUCCESS;
     }
 
     @Override
