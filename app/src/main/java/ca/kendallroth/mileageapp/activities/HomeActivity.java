@@ -6,6 +6,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -16,8 +19,6 @@ import ca.kendallroth.mileageapp.R;
  */
 public class HomeActivity extends AppCompatActivity {
 
-  Button mSettingsButton;
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -25,9 +26,16 @@ public class HomeActivity extends AppCompatActivity {
 
     // Initialize the UI
     initView();
+  }
 
+  /**
+   * Initialize the UI components
+   */
+  private void initView() {
     // Toolbar
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    toolbar.setTitle("Home");
+
     setSupportActionBar(toolbar);
 
     // Floating Action button
@@ -35,8 +43,6 @@ public class HomeActivity extends AppCompatActivity {
     fab.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        onSettingsClick();
-
         Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
             .setAction("Action", null).show();
       }
@@ -44,26 +50,36 @@ public class HomeActivity extends AppCompatActivity {
   }
 
   /**
-   * Initialize the UI components
+   * Create the app bar menu
+   * @param menu Placeholder menu
+   * @return Menu creation status
    */
-  private void initView() {
-    // Settings button
-    mSettingsButton = (Button) findViewById(R.id.settings_button);
-    mSettingsButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        // Open the Settings activity
-        onSettingsClick();
-      }
-    });
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.menu_home, menu);
+    return true;
   }
 
   /**
-   * Start the Settings activity
+   * Event handler for options menu item selection
+   * @param item Selected menu item
+   * @return Operation success indicator
    */
-  public void onSettingsClick() {
-    Intent settingsIntent = new Intent(this, SettingsActivity.class);
-    startActivity(settingsIntent);
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    // Handle item selection
+    switch (item.getItemId()) {
+      case R.id.action_settings:
+        // Start the Settings activity
+        Intent settingsIntent = new Intent(this, SettingsActivity.class);
+        startActivity(settingsIntent);
+
+        return true;
+      default:
+        // Unhandled options should return false (done in super class)
+        return super.onOptionsItemSelected(item);
+    }
   }
 
   /**

@@ -43,9 +43,6 @@ public class AuthActivity extends AppCompatActivity implements IAccountCreateLis
     mTabAdapter = new AccountTabAdapter(getSupportFragmentManager(), mAdapterFragments);
     mContentSwitcher.setPagerAdapter(mTabAdapter);
     //mContentSwitcher.setPageChangeListener(mTabChangeListener);
-
-    // Hide the Action bar (on all "Authentication" activities)
-    getSupportActionBar().hide();
   }
 
   /**
