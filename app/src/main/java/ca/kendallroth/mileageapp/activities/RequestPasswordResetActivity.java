@@ -11,10 +11,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import org.dom4j.Document;
 import org.dom4j.Node;
@@ -83,6 +87,18 @@ public class RequestPasswordResetActivity extends AppCompatActivity {
     // Email input
     mEmailInput = (EditText) findViewById(R.id.email_input);
     mEmailViewLayout = (TextInputLayout) findViewById(R.id.email_layout);
+    mEmailInput.setOnEditorActionListener(new OnEditorActionListener() {
+      @Override
+      public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        // Attempt requesting a password reset on <Enter> keypress while the Email input has focus
+        if (actionId == R.id.email_input || actionId == EditorInfo.IME_NULL) {
+          doPasswordResetRequest();
+          return true;
+        }
+
+        return false;
+      }
+    });
 
     // Request password reset button
     mRequestResetButton = (Button) findViewById(R.id.request_reset_button);
@@ -90,7 +106,7 @@ public class RequestPasswordResetActivity extends AppCompatActivity {
       @Override
       public void onClick(View view) {
         // Attempt a Password Reset Request
-        attemptPasswordResetRequest();
+        doPasswordResetRequest();
       }
     });
 
@@ -133,7 +149,7 @@ public class RequestPasswordResetActivity extends AppCompatActivity {
    * Attempts to request a password reset for the account specified by the reset request form. If there are
    *  form errors the errors are presented and no attempt is made.
    */
-  private void attemptPasswordResetRequest() {
+  private void doPasswordResetRequest() {
     if (mRequestPasswordResetTask != null) {
       return;
     }
