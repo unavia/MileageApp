@@ -213,7 +213,7 @@ public class RegisterFragment extends Fragment implements ClearableFragment {
     View focusView = null;
 
     // Check for a valid password confirmation (must match), if the user entered one.
-    if (TextUtils.isEmpty(password)) {
+    if (TextUtils.isEmpty(passwordConfirm)) {
       mPasswordConfirmViewLayout.setError(getString(R.string.error_field_required));
       focusView = mPasswordConfirmInput;
       cancel = true;
