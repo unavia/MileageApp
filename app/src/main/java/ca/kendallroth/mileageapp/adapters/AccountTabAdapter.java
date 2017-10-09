@@ -1,4 +1,4 @@
-package ca.kendallroth.mileageapp.tab_adapters;
+package ca.kendallroth.mileageapp.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

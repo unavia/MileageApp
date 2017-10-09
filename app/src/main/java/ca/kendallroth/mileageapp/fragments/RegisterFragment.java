@@ -25,7 +25,10 @@ import java.util.List;
 
 import ca.kendallroth.mileageapp.R;
 import ca.kendallroth.mileageapp.utils.AccountUtils;
+import ca.kendallroth.mileageapp.utils.AuthUtils;
 import ca.kendallroth.mileageapp.utils.ClearableFragment;
+import ca.kendallroth.mileageapp.utils.Response;
+import ca.kendallroth.mileageapp.utils.StatusCode;
 import ca.kendallroth.mileageapp.utils.XMLFileUtils;
 
 /**
@@ -292,43 +295,10 @@ public class RegisterFragment extends Fragment implements ClearableFragment {
         return false;
       }
 
-      try {
-        // Get the user file for modification (adding user)
-        Document usersFile = XMLFileUtils.getFile(getActivity().getBaseContext(), XMLFileUtils.USERS_FILE_NAME);
-        Element rootElement = usersFile.getRootElement();
+      Response createAccountResponse = AuthUtils.addAuthUser(mEmail, mName, mPassword);
 
-        List<Node> users = usersFile.selectNodes("/users/user");
-        boolean isUniqueUser = true;
-
-        // Verify that the user does not already exist
-        for (Node user : users) {
-          if (user.valueOf("@email").equals(mEmail)) {
-            isUniqueUser = false;
-            break;
-          }
-        }
-
-        // TODO: This needs to be modified to return a proper error (if possible)
-        if (!isUniqueUser) {
-          return false;
-        }
-
-        // Add the new user to the document
-        //  NOTE: This only works because it is the root element - how else could it work?
-        rootElement.addElement("user")
-            .addAttribute("email", mEmail)
-            .addAttribute("name", mName)
-            .addAttribute("password", mPassword);
-
-        // Write the modified file back out
-        XMLFileUtils.createFile(getActivity().getBaseContext(), XMLFileUtils.USERS_FILE_NAME, usersFile);
-
-        Log.d("MileageApp.auth", String.format("New user added: '%s', '%s', '%s'", mName, mEmail, mPassword));
-
-        return true;
-      } catch(Exception e) {
-        return false;
-      }
+      // TODO: Do something with the response
+      return createAccountResponse.getStatusCode() == StatusCode.SUCCESS ? true : false;
     }
 
     @Override
