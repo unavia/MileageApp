@@ -32,8 +32,11 @@ import ca.kendallroth.mileageapp.R;
 import ca.kendallroth.mileageapp.activities.RequestPasswordResetActivity;
 import ca.kendallroth.mileageapp.activities.ResetPasswordActivity;
 import ca.kendallroth.mileageapp.utils.AccountUtils;
+import ca.kendallroth.mileageapp.utils.AuthUtils;
 import ca.kendallroth.mileageapp.utils.ClearableFragment;
+import ca.kendallroth.mileageapp.utils.Response;
 import ca.kendallroth.mileageapp.utils.ScrollableFragment;
+import ca.kendallroth.mileageapp.utils.StatusCode;
 import ca.kendallroth.mileageapp.utils.XMLFileUtils;
 
 import static android.app.Activity.RESULT_OK;
@@ -407,33 +410,10 @@ public class LoginFragment extends Fragment implements ClearableFragment, Scroll
         return false;
       }
 
-      Document document;
+      // Attempt authentication for the user
+      Response loginResponse = AuthUtils.findAuthUser(mEmail, mPassword);
 
-      try {
-        // Read XML file with user information
-        document = XMLFileUtils.getFile(getActivity().getBaseContext(), XMLFileUtils.USERS_FILE_NAME);
-
-        // Select all the "user" nodes in the document
-        List<Node> users = document.selectNodes("/users/user");
-
-        Log.d("MileageApp", String.format("Login attempt from '%s' with password '%s'", mEmail, mPassword));
-
-        for (Node user : users) {
-          // Compare the entered email and password against the "registered" accounts
-          if (user.valueOf("@email").equals(mEmail)) {
-            boolean validAuthAttempt = user.valueOf("@password").equals(mPassword);
-
-            Log.d("MileageApp.auth", String.format("Login attempt %s", validAuthAttempt ? "successful" : "failed"));
-
-            return validAuthAttempt;
-          }
-        }
-      } catch (Exception e) {
-        // Return false (no match) if the file parsing fails or throws an exception
-        return false;
-      }
-
-      return false;
+      return loginResponse.getStatusCode() == StatusCode.SUCCESS;
     }
 
     @Override

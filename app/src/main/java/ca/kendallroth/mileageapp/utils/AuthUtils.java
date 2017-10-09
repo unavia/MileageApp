@@ -82,7 +82,7 @@ public abstract class AuthUtils {
 
       boolean doesUserExist = false;
 
-      // Validate that the user email is unique
+      // Verify that the user email exists
       for (Node user : users) {
         if (user.valueOf("@email").equals(email)) {
           doesUserExist = true;
@@ -97,6 +97,61 @@ public abstract class AuthUtils {
       } else {
         responseStatus = StatusCode.ERROR;
         responseString = "code_error_find_account";
+      }
+    } catch (Exception e) {
+      // Handle file exceptions
+      responseStatus = StatusCode.FAILURE;
+      responseString = "code_failure_find_account_file_parse";
+    }
+
+    Log.d("MileageApp.auth", String.format("findAuthUser ('%s'): %s", email, responseString));
+
+    return new Response(responseStatus, responseString);
+  }
+
+
+  /**
+   * Check if a user login exists in the authentication file
+   * @param email    Email identifier
+   * @param password Account password
+   * @return Operation response with status and message
+   */
+  public static Response findAuthUser(String email, String password) {
+    if (fileContext == null) return invalidFileContext;
+
+    Document document;
+    StatusCode responseStatus = null;
+    String responseString = "";
+
+    try {
+      // Read XML file with user information
+      document = XMLFileUtils.getFile(fileContext, XMLFileUtils.USERS_FILE_NAME);
+
+      // Select all the "user" nodes in the document
+      List<Node> users = document.selectNodes("/users/user");
+
+      boolean doesUserExist = false;
+
+      // Verify that the user email and password exists
+      for (Node user : users) {
+        if (user.valueOf("@email").equals(email)) {
+          if (user.valueOf("@password").equals(password)) {
+            doesUserExist = true;
+            responseStatus = StatusCode.SUCCESS;
+            responseString = "code_success_find_account";
+          } else {
+            doesUserExist = false;
+            responseStatus = StatusCode.ERROR;
+            responseString = "code_error_find_account_invalid_password";
+          }
+
+          break;
+        }
+      }
+
+      if (responseStatus == null) {
+        responseStatus = StatusCode.ERROR;
+        responseString = "code_success_find_account_invalid_account";
       }
     } catch (Exception e) {
       // Handle file exceptions
