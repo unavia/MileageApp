@@ -65,11 +65,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
       finish();
     }
 
-    // Intialize the UI Components
+    // Initialize the UI Components
     initView();
-
-    // Hide the Action bar (on all "Authentication" activities)
-    getSupportActionBar().hide();
   }
 
   /**

@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">MileageApp</string>
 
+    <!-- Menu actions -->
+    <string name="action_app_info">About App</string>
+    <string name="action_settings">Settings</string>
+
     <!-- Message codes -->
     <string name="code_failure_file_context">File context not initialized</string>
     <string name="code_method_not_implemented">Method is not implemented yet</string>

@@ -48,9 +48,6 @@ public class RequestPasswordResetActivity extends AppCompatActivity {
 
     // Initialize the UI components
     initView();
-
-    // Hide the Action bar (on all "Authentication" activities)
-    getSupportActionBar().hide();
   }
 
   /**
