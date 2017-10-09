@@ -42,7 +42,7 @@ public abstract class AuthUtils {
     try {
       // Create the XML document and add the root element
       document = DocumentHelper.createDocument();
-      Element root = document.addElement("users");
+      document.addElement("users");
 
       // Create the XML file
       XMLFileUtils.createFile(fileContext, XMLFileUtils.USERS_FILE_NAME, document);

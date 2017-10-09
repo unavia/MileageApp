@@ -4,12 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
-
 import ca.kendallroth.mileageapp.utils.AuthUtils;
 import ca.kendallroth.mileageapp.utils.Response;
+import ca.kendallroth.mileageapp.utils.StatusCode;
 import ca.kendallroth.mileageapp.utils.XMLFileUtils;
 
 /**
@@ -47,7 +44,6 @@ public class MileageApp extends Application {
    * Create the authentication file with initial values
    */
   private void checkAuthenticationFile() {
-
     // Skip this step if the authentication file already exists
     if(findAuthFile()) {
       return;
@@ -55,9 +51,14 @@ public class MileageApp extends Application {
 
     // Create the authentication file
     Response createAuthFileResponse = AuthUtils.createAuthFile();
+    boolean createAuthFileSuccess = createAuthFileResponse.getStatusCode() == StatusCode.SUCCESS;
+
+    // Add a sample user
+    if (createAuthFileSuccess) {
+      AuthUtils.addAuthUser("kendall@example.com", "Kendall Roth", "password");
+    }
 
     // TODO: Do something with response
-    Log.d("MileageApp.auth", String.format("checkAuthenticationFile response: %s", createAuthFileResponse.toString()));
   }
 
   /**
