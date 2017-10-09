@@ -11,12 +11,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -110,6 +113,18 @@ public class ResetPasswordActivity extends AppCompatActivity {
     // Password confirmation input
     mPasswordConfirmInput = (EditText) findViewById(R.id.password_confirm_input);
     mPasswordConfirmViewLayout = (TextInputLayout) findViewById(R.id.password_confirm_layout);
+    mPasswordConfirmInput.setOnEditorActionListener(new OnEditorActionListener() {
+      @Override
+      public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        // Attempt resetting a password on <Enter> keypress while the Confirm Password input has focus
+        if (actionId == R.id.email_input || actionId == EditorInfo.IME_NULL) {
+          doPasswordReset(mEmailAccount);
+          return true;
+        }
+
+        return false;
+      }
+    });
 
     // Password reset button
     mResetPasswordButton = (Button) findViewById(R.id.reset_password_button);
@@ -117,7 +132,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
       @Override
       public void onClick(View view) {
         // Attempt to reset the password
-        attemptPasswordReset(mEmailAccount);
+        doPasswordReset(mEmailAccount);
       }
     });
 
@@ -151,7 +166,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
    * Attempts to reset a password for the account specified by the reset form. If there are
    *  form errors the errors are presented and no attempt is made.
    */
-  private void attemptPasswordReset(String accountEmail) {
+  private void doPasswordReset(String accountEmail) {
     if (mResetPasswordTask != null) {
       return;
     }
