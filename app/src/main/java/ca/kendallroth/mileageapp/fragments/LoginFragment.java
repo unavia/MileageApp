@@ -419,25 +419,28 @@ public class LoginFragment extends Fragment implements ClearableFragment, Scroll
 
       CharSequence snackbarResource = null;
 
+      // Handle the login attempt response
       if (response.getStatusCode() == StatusCode.SUCCESS) {
         // Indicate the success of the login attempt in the parent callback
-        mILoginAttemptListener.onLoginAttempt(true);
+        if (mILoginAttemptListener != null) {
+          mILoginAttemptListener.onLoginAttempt(true);
+        }
 
         snackbarResource = getString(R.string.success_login);
       } else if (response.getStatusCode() == StatusCode.ERROR) {
         // Indicate an invalid password/account
         mPasswordViewLayout.setError(getString(R.string.error_incorrect_login));
         mPasswordInput.requestFocus();
-
-        snackbarResource = getString(R.string.error_login);
       } else {
         // Login attempt failed (unknown)
         snackbarResource = getString(R.string.failure_login);
       }
 
-      // Need to use the android "content" layout as the snackbar anchor (since this is a fragment)
-      View snackbarRoot = getActivity().findViewById(android.R.id.content);
-      Snackbar.make(snackbarRoot, snackbarResource, Snackbar.LENGTH_SHORT).show();
+      if (snackbarResource != null) {
+        // Need to use the android "content" layout as the snackbar anchor (since this is a fragment)
+        View snackbarRoot = getActivity().findViewById(android.R.id.content);
+        Snackbar.make(snackbarRoot, snackbarResource, Snackbar.LENGTH_SHORT).show();
+      }
     }
 
     @Override

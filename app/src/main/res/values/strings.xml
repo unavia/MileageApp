@@ -43,17 +43,17 @@
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_name">This name is too short</string>
     <string name="error_invalid_password">This password is too short</string>
-    <string name="error_login">Invalid account email/password</string>
     <string name="error_mismatching_passwords">These passwords do not match</string>
     <string name="error_reset_password_invalid_email">No account with this email</string>
 
     <!-- Operation failure messages -->
     <string name="failure_clear_database">Failed to clear database</string>
-    <string name="failure_create_account">Account creation failed</string>
     <string name="failure_delete_account">Account deletion failed</string>
     <string name="failure_login">Login failed</string>
+    <string name="failure_registration">Registration failed</string>
     <string name="failure_request_password_reset">Password reset request failed</string>
     <string name="failure_reset_password">Password reset failed</string>
+    <string name="failure_reset_password_invalid_account">Account not found for password reset</string>
 
     <!-- Hint text messages -->
     <string name="hint_email">Email</string>

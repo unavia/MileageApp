@@ -280,7 +280,7 @@ public class RegisterFragment extends Fragment implements ClearableFragment {
   /**
    * Represents an asynchronous account creation task used to create a user account
    */
-  private class CreateAccountTask extends AsyncTask<Void, Void, Boolean> {
+  private class CreateAccountTask extends AsyncTask<Void, Void, Response> {
 
     private final String mEmail;
     private final String mName;
@@ -293,30 +293,34 @@ public class RegisterFragment extends Fragment implements ClearableFragment {
     }
 
     @Override
-    protected Boolean doInBackground(Void... params) {
-      // TODO: attempt authentication against a network service.
+    protected Response doInBackground(Void... params) {
+      StatusCode responseStatus = null;
+      String responseString = "";
 
+      // TODO: attempt authentication against a network service.
       try {
         // Simulate network access.
         Thread.sleep(2000);
       } catch (InterruptedException e) {
-        return false;
+        responseStatus = StatusCode.FAILURE;
+        responseString = "code_failure_register_interrupted_connection";
+        return new Response(responseStatus, responseString);
       }
 
       // Create the new account
-      Response createAccountResponse = AuthUtils.addAuthUser(mEmail, mName, mPassword);
-
-      // TODO: Do something with the response
-      return createAccountResponse.getStatusCode() == StatusCode.SUCCESS;
+      return AuthUtils.addAuthUser(mEmail, mName, mPassword);
     }
 
     @Override
-    protected void onPostExecute(final Boolean success) {
+    protected void onPostExecute(final Response response) {
       mAuthTask = null;
       mProgressDialog.dismiss();
 
-      if (success) {
-        // NOTE: Determine what to do on successful account creation (likely send email)
+      CharSequence snackbarResource = null;
+
+      // Handle the registration attempt response
+      if (response.getStatusCode() == StatusCode.SUCCESS) {
+        // TODO: Determine what to do on successful account creation (likely send email)
 
         // Clear the form
         clearInputs();
@@ -325,21 +329,23 @@ public class RegisterFragment extends Fragment implements ClearableFragment {
         if (mIAccountCreateListener != null) {
           // Set parent Activity to Login view using callback
           mIAccountCreateListener.onAccountCreateRequest(mEmail, mPassword);
+
+          snackbarResource = getString(R.string.success_create_account);
         }
-      } else {
+      } else if (response.getStatusCode() == StatusCode.ERROR) {
+        // Indicate that an account with this email already exists
         mEmailViewLayout.setError(getString(R.string.error_account_already_exists));
         mEmailViewLayout.requestFocus();
+      } else {
+        // Registration attempt failed (unknown)
+        snackbarResource = getString(R.string.failure_registration);
       }
 
       // Need to use the android "content" layout as the snackbar anchor (since this is a fragment)
-      View snackbarRoot = getActivity().findViewById(android.R.id.content);
-
-      // Define a snackbar based on the operation status
-      CharSequence snackbarResource = success
-          ? getString(R.string.success_create_account)
-          : getString(R.string.failure_create_account);
-      Snackbar resultSnackbar = Snackbar.make(snackbarRoot, snackbarResource, Snackbar.LENGTH_SHORT);
-      resultSnackbar.show();
+      if (snackbarResource != null) {
+        View snackbarRoot = getActivity().findViewById(android.R.id.content);
+        Snackbar.make(snackbarRoot, snackbarResource, Snackbar.LENGTH_SHORT).show();
+      }
     }
 
     @Override

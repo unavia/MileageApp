@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -237,7 +238,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
   /**
    * Represents an asynchronous task used to reset a password.
    */
-  private class ResetPasswordTask extends AsyncTask<Void, Void, Boolean> {
+  private class ResetPasswordTask extends AsyncTask<Void, Void, Response> {
 
     private final String mEmail;
     private final String mPassword;
@@ -248,35 +249,52 @@ public class ResetPasswordActivity extends AppCompatActivity {
     }
 
     @Override
-    protected Boolean doInBackground(Void... params) {
+    protected Response doInBackground(Void... params) {
       Log.d("MileageApp", String.format("Password reset attempt from '%s'", mEmail));
+
+      StatusCode responseStatus = null;
+      String responseString = "";
 
       // TODO: attempt authentication against a network service.
       try {
         // Simulate network access
         Thread.sleep(2000);
       } catch (InterruptedException e) {
-        return false;
+        responseStatus = StatusCode.FAILURE;
+        responseString = "code_failure_reset_password_interrupted_connection";
+        return new Response(responseStatus, responseString);
       }
 
       // Reset the user's password
-      Response resetPasswordResponse = AuthUtils.setAuthUserPassword(mEmail, mPassword);
-
-      // TODO: Do something with the response
-      return resetPasswordResponse.getStatusCode() == StatusCode.SUCCESS;
+      return AuthUtils.setAuthUserPassword(mEmail, mPassword);
     }
 
     @Override
-    protected void onPostExecute(final Boolean success) {
+    protected void onPostExecute(final Response response) {
       mResetPasswordTask = null;
       mProgressDialog.dismiss();
 
-      if (success) {
+      CharSequence snackbarResource = null;
+
+      // Handle the password reset attempt response
+      if (response.getStatusCode() == StatusCode.SUCCESS) {
         // Indicate a successful password reset
         setResult(RESULT_OK);
         finish();
+
+        snackbarResource = getString(R.string.success_reset_password);
+      } else if (response.getStatusCode() == StatusCode.ERROR) {
+        // Requested account was not found
+        snackbarResource = getString(R.string.failure_reset_password_invalid_account);
       } else {
-        // TODO: Indicate that the reset has failed
+        // Password reset attempt failed (unknown)
+        snackbarResource = getString(R.string.failure_reset_password);
+      }
+
+      if (snackbarResource != null) {
+        // Need to use the android "content" layout as the snackbar anchor
+        View snackbarRoot = findViewById(android.R.id.content);
+        Snackbar.make(snackbarRoot, snackbarResource, Snackbar.LENGTH_SHORT).show();
       }
     }
 
