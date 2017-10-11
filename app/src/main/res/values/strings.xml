@@ -39,10 +39,11 @@
     <!-- Error messages -->
     <string name="error_account_already_exists">An account with this email already exists</string>
     <string name="error_field_required">This field is required</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_incorrect_login">This email/password is incorrect</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_name">This name is too short</string>
     <string name="error_invalid_password">This password is too short</string>
+    <string name="error_login">Invalid account email/password</string>
     <string name="error_mismatching_passwords">These passwords do not match</string>
     <string name="error_reset_password_invalid_email">No account with this email</string>
 

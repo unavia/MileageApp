@@ -383,7 +383,7 @@ public class LoginFragment extends Fragment implements ClearableFragment, Scroll
   /**
    * Represents an asynchronous login/registration task used to authenticate the user.
    */
-  private class LoginTask extends AsyncTask<Void, Void, Boolean> {
+  private class LoginTask extends AsyncTask<Void, Void, Response> {
 
     private final String mEmail;
     private final String mPassword;
@@ -394,44 +394,50 @@ public class LoginFragment extends Fragment implements ClearableFragment, Scroll
     }
 
     @Override
-    protected Boolean doInBackground(Void... params) {
-      // TODO: attempt authentication against a network service.
+    protected Response doInBackground(Void... params) {
+      StatusCode responseStatus = null;
+      String responseString = "";
 
+      // TODO: attempt authentication against a network service.
       try {
         // Simulate network access.
         Thread.sleep(2000);
       } catch (InterruptedException e) {
-        return false;
+        responseStatus = StatusCode.FAILURE;
+        responseString = "code_failure_login_interrupted_connection";
+        return new Response(responseStatus, responseString);
       }
 
       // Attempt authentication for the user
-      Response loginResponse = AuthUtils.findAuthUser(mEmail, mPassword);
-
-      return loginResponse.getStatusCode() == StatusCode.SUCCESS;
+      return AuthUtils.findAuthUser(mEmail, mPassword);
     }
 
     @Override
-    protected void onPostExecute(final Boolean success) {
+    protected void onPostExecute(final Response response) {
       mAuthTask = null;
       mProgressDialog.dismiss();
 
-      if (success) {
+      CharSequence snackbarResource = null;
+
+      if (response.getStatusCode() == StatusCode.SUCCESS) {
         // Indicate the success of the login attempt in the parent callback
         mILoginAttemptListener.onLoginAttempt(true);
-      } else {
-        mPasswordViewLayout.setError(getString(R.string.error_incorrect_password));
+
+        snackbarResource = getString(R.string.success_login);
+      } else if (response.getStatusCode() == StatusCode.ERROR) {
+        // Indicate an invalid password/account
+        mPasswordViewLayout.setError(getString(R.string.error_incorrect_login));
         mPasswordInput.requestFocus();
+
+        snackbarResource = getString(R.string.error_login);
+      } else {
+        // Login attempt failed (unknown)
+        snackbarResource = getString(R.string.failure_login);
       }
 
       // Need to use the android "content" layout as the snackbar anchor (since this is a fragment)
       View snackbarRoot = getActivity().findViewById(android.R.id.content);
-
-      // Define a snackbar based on the operation status
-      CharSequence snackbarResource = success
-          ? getString(R.string.success_login)
-          : getString(R.string.failure_login);
-      Snackbar resultSnackbar = Snackbar.make(snackbarRoot, snackbarResource, Snackbar.LENGTH_SHORT);
-      resultSnackbar.show();
+      Snackbar.make(snackbarRoot, snackbarResource, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
