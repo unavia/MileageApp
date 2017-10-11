@@ -23,18 +23,15 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import org.dom4j.Document;
-import org.dom4j.Node;
-
-import java.util.List;
-
 import ca.kendallroth.mileageapp.R;
 import ca.kendallroth.mileageapp.activities.RequestPasswordResetActivity;
 import ca.kendallroth.mileageapp.activities.ResetPasswordActivity;
 import ca.kendallroth.mileageapp.utils.AccountUtils;
+import ca.kendallroth.mileageapp.utils.AuthUtils;
 import ca.kendallroth.mileageapp.utils.ClearableFragment;
+import ca.kendallroth.mileageapp.utils.Response;
 import ca.kendallroth.mileageapp.utils.ScrollableFragment;
-import ca.kendallroth.mileageapp.utils.XMLFileUtils;
+import ca.kendallroth.mileageapp.utils.StatusCode;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -386,7 +383,7 @@ public class LoginFragment extends Fragment implements ClearableFragment, Scroll
   /**
    * Represents an asynchronous login/registration task used to authenticate the user.
    */
-  private class LoginTask extends AsyncTask<Void, Void, Boolean> {
+  private class LoginTask extends AsyncTask<Void, Void, Response> {
 
     private final String mEmail;
     private final String mPassword;
@@ -397,67 +394,53 @@ public class LoginFragment extends Fragment implements ClearableFragment, Scroll
     }
 
     @Override
-    protected Boolean doInBackground(Void... params) {
-      // TODO: attempt authentication against a network service.
+    protected Response doInBackground(Void... params) {
+      StatusCode responseStatus = null;
+      String responseString = "";
 
+      // TODO: attempt authentication against a network service.
       try {
         // Simulate network access.
         Thread.sleep(2000);
       } catch (InterruptedException e) {
-        return false;
+        responseStatus = StatusCode.FAILURE;
+        responseString = "code_failure_login_interrupted_connection";
+        return new Response(responseStatus, responseString);
       }
 
-      Document document;
-
-      try {
-        // Read XML file with user information
-        document = XMLFileUtils.getFile(getActivity().getBaseContext(), XMLFileUtils.USERS_FILE_NAME);
-
-        // Select all the "user" nodes in the document
-        List<Node> users = document.selectNodes("/users/user");
-
-        Log.d("MileageApp", String.format("Login attempt from '%s' with password '%s'", mEmail, mPassword));
-
-        for (Node user : users) {
-          // Compare the entered email and password against the "registered" accounts
-          if (user.valueOf("@email").equals(mEmail)) {
-            boolean validAuthAttempt = user.valueOf("@password").equals(mPassword);
-
-            Log.d("MileageApp.auth", String.format("Login attempt %s", validAuthAttempt ? "successful" : "failed"));
-
-            return validAuthAttempt;
-          }
-        }
-      } catch (Exception e) {
-        // Return false (no match) if the file parsing fails or throws an exception
-        return false;
-      }
-
-      return false;
+      // Attempt authentication for the user
+      return AuthUtils.findAuthUser(mEmail, mPassword);
     }
 
     @Override
-    protected void onPostExecute(final Boolean success) {
+    protected void onPostExecute(final Response response) {
       mAuthTask = null;
       mProgressDialog.dismiss();
 
-      if (success) {
+      CharSequence snackbarResource = null;
+
+      // Handle the login attempt response
+      if (response.getStatusCode() == StatusCode.SUCCESS) {
         // Indicate the success of the login attempt in the parent callback
-        mILoginAttemptListener.onLoginAttempt(true);
-      } else {
-        mPasswordViewLayout.setError(getString(R.string.error_incorrect_password));
+        if (mILoginAttemptListener != null) {
+          mILoginAttemptListener.onLoginAttempt(true);
+        }
+
+        snackbarResource = getString(R.string.success_login);
+      } else if (response.getStatusCode() == StatusCode.ERROR) {
+        // Indicate an invalid password/account
+        mPasswordViewLayout.setError(getString(R.string.error_incorrect_login));
         mPasswordInput.requestFocus();
+      } else {
+        // Login attempt failed (unknown)
+        snackbarResource = getString(R.string.failure_login);
       }
 
-      // Need to use the android "content" layout as the snackbar anchor (since this is a fragment)
-      View snackbarRoot = getActivity().findViewById(android.R.id.content);
-
-      // Define a snackbar based on the operation status
-      CharSequence snackbarResource = success
-          ? getString(R.string.success_login)
-          : getString(R.string.failure_login);
-      Snackbar resultSnackbar = Snackbar.make(snackbarRoot, snackbarResource, Snackbar.LENGTH_SHORT);
-      resultSnackbar.show();
+      if (snackbarResource != null) {
+        // Need to use the android "content" layout as the snackbar anchor (since this is a fragment)
+        View snackbarRoot = getActivity().findViewById(android.R.id.content);
+        Snackbar.make(snackbarRoot, snackbarResource, Snackbar.LENGTH_SHORT).show();
+      }
     }
 
     @Override

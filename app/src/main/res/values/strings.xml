@@ -39,7 +39,7 @@
     <!-- Error messages -->
     <string name="error_account_already_exists">An account with this email already exists</string>
     <string name="error_field_required">This field is required</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_incorrect_login">This email/password is incorrect</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_name">This name is too short</string>
     <string name="error_invalid_password">This password is too short</string>
@@ -48,11 +48,12 @@
 
     <!-- Operation failure messages -->
     <string name="failure_clear_database">Failed to clear database</string>
-    <string name="failure_create_account">Account creation failed</string>
     <string name="failure_delete_account">Account deletion failed</string>
     <string name="failure_login">Login failed</string>
+    <string name="failure_registration">Registration failed</string>
     <string name="failure_request_password_reset">Password reset request failed</string>
     <string name="failure_reset_password">Password reset failed</string>
+    <string name="failure_reset_password_invalid_account">Account not found for password reset</string>
 
     <!-- Hint text messages -->
     <string name="hint_email">Email</string>
@@ -83,9 +84,10 @@
     <string name="prompt_login">Already have an account? Login</string>
 
     <!-- Activity titles -->
-    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_home">Home</string>
     <string name="title_activity_request_password_reset">Forgot Password</string>
     <string name="title_activity_reset_password">Reset Password</string>
+    <string name="title_activity_settings">Settings</string>
     <string name="title_app">MileageApp</string>
 
     <string name="text_app_message">This app was developed with the intention of simplifying the process of tracking gas mileage (efficiency) per hand. As the owner of a 2003 Corolla, I know firsthand the annoyance caused by not having a electronic means of tracking my mileage, so I decided to create an app to hopefully streamline the process.</string>

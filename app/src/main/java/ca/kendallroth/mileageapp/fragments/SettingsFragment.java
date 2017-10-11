@@ -144,7 +144,7 @@ public class SettingsFragment extends PreferenceFragment {
    * Handler for the Delete Account confirmation dialog confirm action
    */
   public void onDeleteAccountConfirm() {
-    // TODO: Delete the user's account
+    // TODO: Delete the user's account (need information stored somewhere)
     Response accountDeleteResponse = AuthUtils.removeAuthUser("", "");
 
     // Need to use the android "content" layout as the snackbar anchor (since this is a fragment)

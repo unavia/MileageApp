@@ -5,28 +5,28 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.Node;
-
-import java.util.List;
+import android.widget.TextView.OnEditorActionListener;
 
 import ca.kendallroth.mileageapp.R;
 import ca.kendallroth.mileageapp.utils.AccountUtils;
-import ca.kendallroth.mileageapp.utils.XMLFileUtils;
+import ca.kendallroth.mileageapp.utils.AuthUtils;
+import ca.kendallroth.mileageapp.utils.Response;
+import ca.kendallroth.mileageapp.utils.StatusCode;
 
 /**
  * Reset password activity that enables a user to reset their password
@@ -110,6 +110,18 @@ public class ResetPasswordActivity extends AppCompatActivity {
     // Password confirmation input
     mPasswordConfirmInput = (EditText) findViewById(R.id.password_confirm_input);
     mPasswordConfirmViewLayout = (TextInputLayout) findViewById(R.id.password_confirm_layout);
+    mPasswordConfirmInput.setOnEditorActionListener(new OnEditorActionListener() {
+      @Override
+      public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        // Attempt resetting a password on <Enter> keypress while the Confirm Password input has focus
+        if (actionId == R.id.email_input || actionId == EditorInfo.IME_NULL) {
+          doPasswordReset(mEmailAccount);
+          return true;
+        }
+
+        return false;
+      }
+    });
 
     // Password reset button
     mResetPasswordButton = (Button) findViewById(R.id.reset_password_button);
@@ -117,7 +129,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
       @Override
       public void onClick(View view) {
         // Attempt to reset the password
-        attemptPasswordReset(mEmailAccount);
+        doPasswordReset(mEmailAccount);
       }
     });
 
@@ -151,7 +163,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
    * Attempts to reset a password for the account specified by the reset form. If there are
    *  form errors the errors are presented and no attempt is made.
    */
-  private void attemptPasswordReset(String accountEmail) {
+  private void doPasswordReset(String accountEmail) {
     if (mResetPasswordTask != null) {
       return;
     }
@@ -226,7 +238,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
   /**
    * Represents an asynchronous task used to reset a password.
    */
-  private class ResetPasswordTask extends AsyncTask<Void, Void, Boolean> {
+  private class ResetPasswordTask extends AsyncTask<Void, Void, Response> {
 
     private final String mEmail;
     private final String mPassword;
@@ -237,63 +249,52 @@ public class ResetPasswordActivity extends AppCompatActivity {
     }
 
     @Override
-    protected Boolean doInBackground(Void... params) {
+    protected Response doInBackground(Void... params) {
       Log.d("MileageApp", String.format("Password reset attempt from '%s'", mEmail));
+
+      StatusCode responseStatus = null;
+      String responseString = "";
 
       // TODO: attempt authentication against a network service.
       try {
         // Simulate network access
         Thread.sleep(2000);
       } catch (InterruptedException e) {
-        return false;
+        responseStatus = StatusCode.FAILURE;
+        responseString = "code_failure_reset_password_interrupted_connection";
+        return new Response(responseStatus, responseString);
       }
 
-      Document document;
-
-      try {
-        // Read XML file with user information
-        document = XMLFileUtils.getFile(getBaseContext(), XMLFileUtils.USERS_FILE_NAME);
-
-        // Select all the "user" nodes in the document
-        List<Node> users = document.selectNodes("/users/user");
-
-        boolean passwordResetSuccessful = false;
-
-        // Verify that the requested user email exists (but don't alert if not)
-        for (Node user : users) {
-          if (user.valueOf("@email").equals(mEmail)) {
-            // Update the password
-            Element userElement = (Element) user;
-            userElement.addAttribute("password", mPassword);
-
-            // Write the updated file
-            XMLFileUtils.createFile(getBaseContext(), XMLFileUtils.USERS_FILE_NAME, document);
-
-            passwordResetSuccessful = true;
-            break;
-          }
-        }
-
-        Log.d("MileageApp.auth", String.format("Password reset for email %s", passwordResetSuccessful ? "successful" : "failed"));
-
-        return passwordResetSuccessful;
-      } catch (Exception e) {
-        // Return false (no match) if the file parsing fails or throws an exception
-        return false;
-      }
+      // Reset the user's password
+      return AuthUtils.setAuthUserPassword(mEmail, mPassword);
     }
 
     @Override
-    protected void onPostExecute(final Boolean success) {
+    protected void onPostExecute(final Response response) {
       mResetPasswordTask = null;
       mProgressDialog.dismiss();
 
-      if (success) {
+      CharSequence snackbarResource = null;
+
+      // Handle the password reset attempt response
+      if (response.getStatusCode() == StatusCode.SUCCESS) {
         // Indicate a successful password reset
         setResult(RESULT_OK);
         finish();
+
+        snackbarResource = getString(R.string.success_reset_password);
+      } else if (response.getStatusCode() == StatusCode.ERROR) {
+        // Requested account was not found
+        snackbarResource = getString(R.string.failure_reset_password_invalid_account);
       } else {
-        // TODO: Indicate that the reset has failed
+        // Password reset attempt failed (unknown)
+        snackbarResource = getString(R.string.failure_reset_password);
+      }
+
+      if (snackbarResource != null) {
+        // Need to use the android "content" layout as the snackbar anchor
+        View snackbarRoot = findViewById(android.R.id.content);
+        Snackbar.make(snackbarRoot, snackbarResource, Snackbar.LENGTH_SHORT).show();
       }
     }
 

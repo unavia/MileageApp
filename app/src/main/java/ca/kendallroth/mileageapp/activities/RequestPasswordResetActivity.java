@@ -5,25 +5,27 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-
-import org.dom4j.Document;
-import org.dom4j.Node;
-
-import java.util.List;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import ca.kendallroth.mileageapp.R;
 import ca.kendallroth.mileageapp.utils.AccountUtils;
-import ca.kendallroth.mileageapp.utils.XMLFileUtils;
+import ca.kendallroth.mileageapp.utils.AuthUtils;
+import ca.kendallroth.mileageapp.utils.Response;
+import ca.kendallroth.mileageapp.utils.StatusCode;
 
 /**
  * Request password reset activity that enables a user to request a password reset
@@ -83,6 +85,18 @@ public class RequestPasswordResetActivity extends AppCompatActivity {
     // Email input
     mEmailInput = (EditText) findViewById(R.id.email_input);
     mEmailViewLayout = (TextInputLayout) findViewById(R.id.email_layout);
+    mEmailInput.setOnEditorActionListener(new OnEditorActionListener() {
+      @Override
+      public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        // Attempt requesting a password reset on <Enter> keypress while the Email input has focus
+        if (actionId == R.id.email_input || actionId == EditorInfo.IME_NULL) {
+          doPasswordResetRequest();
+          return true;
+        }
+
+        return false;
+      }
+    });
 
     // Request password reset button
     mRequestResetButton = (Button) findViewById(R.id.request_reset_button);
@@ -90,7 +104,7 @@ public class RequestPasswordResetActivity extends AppCompatActivity {
       @Override
       public void onClick(View view) {
         // Attempt a Password Reset Request
-        attemptPasswordResetRequest();
+        doPasswordResetRequest();
       }
     });
 
@@ -133,7 +147,7 @@ public class RequestPasswordResetActivity extends AppCompatActivity {
    * Attempts to request a password reset for the account specified by the reset request form. If there are
    *  form errors the errors are presented and no attempt is made.
    */
-  private void attemptPasswordResetRequest() {
+  private void doPasswordResetRequest() {
     if (mRequestPasswordResetTask != null) {
       return;
     }
@@ -189,7 +203,7 @@ public class RequestPasswordResetActivity extends AppCompatActivity {
   /**
    * Represents an asynchronous task used to request a password reset.
    */
-  private class RequestPasswordResetTask extends AsyncTask<Void, Void, Boolean> {
+  private class RequestPasswordResetTask extends AsyncTask<Void, Void, Response> {
 
     private final String mEmail;
 
@@ -198,69 +212,58 @@ public class RequestPasswordResetActivity extends AppCompatActivity {
     }
 
     @Override
-    protected Boolean doInBackground(Void... params) {
+    protected Response doInBackground(Void... params) {
       Log.d("MileageApp", String.format("Password reset request attempt from '%s'", mEmail));
+
+      StatusCode responseStatus = null;
+      String responseString = "";
 
       // TODO: attempt authentication against a network service.
       try {
         // Simulate network access
         Thread.sleep(2000);
       } catch (InterruptedException e) {
-        return false;
+        responseStatus = StatusCode.FAILURE;
+        responseString = "code_failure_request_password_reset_interrupted_connection";
+        return new Response(responseStatus, responseString);
       }
 
-      Document document;
+      // Invalid email requests should appear to behave the same as valid email requests,
+      // so as to not alert an unauthenticated/invalid user that an email doesn't exist (security).
 
-      try {
-        // Read XML file with user information
-        document = XMLFileUtils.getFile(getBaseContext(), XMLFileUtils.USERS_FILE_NAME);
-
-        // Select all the "user" nodes in the document
-        List<Node> users = document.selectNodes("/users/user");
-
-        boolean validResetRequestEmail = false;
-
-        // Verify that the requested user email exists (but don't alert if not)
-        for (Node user : users) {
-          if (user.valueOf("@email").equals(mEmail)) {
-            validResetRequestEmail = true;
-            break;
-          }
-        }
-
-        Log.d("MileageApp.auth", String.format("Password reset request email %s", validResetRequestEmail ? "found" : "not found"));
-
-        // TODO: Enable the user to reset their password
-
-        // Invalid email requests should appear to behave the same as valid email requests,
-        // so as to not alert an unauthenticated/invalid user that an email doesn't exist (security).
-
-        // NOTE: Temporarily use whether a valid account was requested to route to activity
-        return validResetRequestEmail;
-      } catch (Exception e) {
-        // Return false (no match) if the file parsing fails or throws an exception
-        return false;
-      }
+      // TODO: Enable the user to reset their password
+      return AuthUtils.findAuthUser(mEmail);
     }
 
     @Override
-    protected void onPostExecute(final Boolean success) {
+    protected void onPostExecute(final Response response) {
       mRequestPasswordResetTask = null;
       mProgressDialog.dismiss();
+
+      CharSequence snackbarResource = null;
 
       // Pass the email associated with the password reset request back to the parent Activity
       Intent intent = new Intent();
       intent.putExtra("emailAccount", mEmail);
 
-      if (success) {
+      // Handle the password reset request attempt response
+      if (response.getStatusCode() == StatusCode.SUCCESS) {
         // Finish the activity and send the result back to the parent Activity
         setResult(RESULT_OK, intent);
         finish();
-      } else {
-        // TODO: Indicate that the reset request has failed (ie. not been sent)
-
+      } else if (response.getStatusCode() == StatusCode.ERROR) {
+        // Indicate that an invalid account was entered
         mEmailViewLayout.setError(getString(R.string.error_reset_password_invalid_email));
         mEmailInput.requestFocus();
+      } else {
+        // Login attempt failed (unknown)
+        snackbarResource = getString(R.string.failure_request_password_reset);
+      }
+
+      if (snackbarResource != null) {
+        // Need to use the android "content" layout as the snackbar anchor
+        View snackbarRoot = findViewById(android.R.id.content);
+        Snackbar.make(snackbarRoot, snackbarResource, Snackbar.LENGTH_SHORT).show();
       }
     }
 

@@ -32,7 +32,7 @@ public abstract class AccountUtils {
    */
   public static boolean validatePassword(String password) {
     //TODO: Replace with updated logic
-    return password.length() > 4;
+    return password.length() >= 4;
   }
 
   /**

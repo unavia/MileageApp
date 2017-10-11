@@ -42,21 +42,116 @@ public abstract class AuthUtils {
     try {
       // Create the XML document and add the root element
       document = DocumentHelper.createDocument();
-      Element root = document.addElement("users");
+      document.addElement("users");
 
       // Create the XML file
       XMLFileUtils.createFile(fileContext, XMLFileUtils.USERS_FILE_NAME, document);
 
       responseStatus = StatusCode.SUCCESS;
       responseString = "code_success_init_account_file";
-
-      Log.d("MileageApp.auth", "Creating empty authentication file was successful");
     } catch (Exception e) {
+      // Handle file exceptions
       responseStatus = StatusCode.FAILURE;
       responseString = "code_failure_init_account_file_parse";
-
-      Log.d("MileageApp.auth", "Creating authentication file failed with a file parsing error");
     }
+
+    Log.d("MileageApp.auth", String.format("createAuthFile: %s", responseString));
+
+    return new Response(responseStatus, responseString);
+  }
+
+
+  /**
+   * Check if a user exists in the authentication file
+   * @param email Email identifier
+   * @return Operation response with status and message
+   */
+  public static Response findAuthUser(String email) {
+    if (fileContext == null) return invalidFileContext;
+
+    Document document;
+    StatusCode responseStatus = null;
+    String responseString = "";
+
+    try {
+      // Read XML file with user information
+      document = XMLFileUtils.getFile(fileContext, XMLFileUtils.USERS_FILE_NAME);
+
+      // Select all the "user" nodes in the document
+      List<Node> users = document.selectNodes("/users/user");
+
+      // Verify that the user email exists
+      for (Node user : users) {
+        if (user.valueOf("@email").equals(email)) {
+          responseStatus = StatusCode.SUCCESS;
+          responseString = "code_success_find_account";
+
+          break;
+        }
+      }
+
+      if (responseStatus == null) {
+        responseStatus = StatusCode.ERROR;
+        responseString = "code_error_find_account";
+      }
+    } catch (Exception e) {
+      // Handle file exceptions
+      responseStatus = StatusCode.FAILURE;
+      responseString = "code_failure_find_account_file_parse";
+    }
+
+    Log.d("MileageApp.auth", String.format("findAuthUser ('%s'): %s", email, responseString));
+
+    return new Response(responseStatus, responseString);
+  }
+
+
+  /**
+   * Check if a user login exists in the authentication file
+   * @param email    Email identifier
+   * @param password Account password
+   * @return Operation response with status and message
+   */
+  public static Response findAuthUser(String email, String password) {
+    if (fileContext == null) return invalidFileContext;
+
+    Document document;
+    StatusCode responseStatus = null;
+    String responseString = "";
+
+    try {
+      // Read XML file with user information
+      document = XMLFileUtils.getFile(fileContext, XMLFileUtils.USERS_FILE_NAME);
+
+      // Select all the "user" nodes in the document
+      List<Node> users = document.selectNodes("/users/user");
+
+      // Verify that the user email and password exists
+      for (Node user : users) {
+        if (user.valueOf("@email").equals(email)) {
+          if (user.valueOf("@password").equals(password)) {
+            responseStatus = StatusCode.SUCCESS;
+            responseString = "code_success_find_account";
+          } else {
+            responseStatus = StatusCode.ERROR;
+            responseString = "code_error_find_account_invalid_password";
+          }
+
+          break;
+        }
+      }
+
+      if (responseStatus == null) {
+        responseStatus = StatusCode.ERROR;
+        responseString = "code_success_find_account_invalid_account";
+      }
+    } catch (Exception e) {
+      // Handle file exceptions
+      responseStatus = StatusCode.FAILURE;
+      responseString = "code_failure_find_account_file_parse";
+    }
+
+    Log.d("MileageApp.auth", String.format("findAuthUser ('%s'): %s", email, responseString));
 
     return new Response(responseStatus, responseString);
   }
@@ -111,16 +206,13 @@ public abstract class AuthUtils {
         responseStatus = StatusCode.ERROR;
         responseString = "code_error_add_account_already_exists";
       }
-
-      String addStatus = !doesUserExist ? " was successful" : " failed because the account already existed";
-      Log.d("MileageApp.auth", String.format("Adding account for email '%s' and password '%s' %s", email, password, addStatus));
     } catch (Exception e) {
-      // Return a failure status (no match) if the file parsing fails or throws an exception
+      // Handle file exceptions
       responseStatus = StatusCode.FAILURE;
       responseString = "code_failure_add_account_file_parse";
-
-      Log.d("MileageApp.auth", String.format("Adding account for email '%s' failed with a file parsing error", email));
     }
+
+    Log.d("MileageApp.auth", String.format("addAuthUser ('%s'): %s", email, responseString));
 
     return new Response(responseStatus, responseString);
   }
@@ -170,33 +262,16 @@ public abstract class AuthUtils {
 
       // Set a warning status if the requested account (email) was not found
       if (responseStatus == null) {
-        responseStatus = StatusCode.WARNING;
+        responseStatus = StatusCode.ERROR;
         responseString = "code_warning_remove_account_not_found";
       }
-
-      // Debugging operation status
-      String removalStatus = "";
-      switch (responseStatus) {
-        case SUCCESS:
-          removalStatus = " was successful";
-          break;
-        case WARNING:
-          removalStatus = " did not complete (no account)";
-          break;
-        case ERROR:
-        default:
-          removalStatus = " failed with an invalid password";
-          break;
-      }
-
-      Log.d("MileageApp.auth", String.format("Removing account for email '%s' and password '%s' %s", email, password, removalStatus));
     } catch (Exception e) {
-      // Return a failure status (no match) if the file parsing fails or throws an exception
+      // Handle file exceptions
       responseStatus = StatusCode.FAILURE;
       responseString = "code_failure_remove_account_file_parse";
-
-      Log.d("MileageApp.auth", String.format("Removing account for email '%s' failed with a file parsing error", email));
     }
+
+    Log.d("MileageApp.auth", String.format("removeAuthUser (%s): %s", email, responseString));
 
     return new Response(responseStatus, responseString);
   }
@@ -212,7 +287,54 @@ public abstract class AuthUtils {
   public static Response updateAuthUserPassword(String email, String newPassword, String oldPassword) {
     if (fileContext == null) return invalidFileContext;
 
-    return new Response(null, MileageApp.getContext().getString(R.string.code_method_not_implemented));
+    Document document;
+    StatusCode responseStatus = null;
+    String responseString = "";
+
+    try {
+      // Read XML file with user information
+      document = XMLFileUtils.getFile(fileContext, XMLFileUtils.USERS_FILE_NAME);
+
+      // Select all the "user" nodes in the document
+      List<Node> users = document.selectNodes("/users/user");
+
+      // Verify that the requested user email exists and the old password is correct
+      for (Node user : users) {
+        if (user.valueOf("@email").equals(email)) {
+          if (user.valueOf("@password").equals(oldPassword)) {
+            // Update the password
+            Element userElement = (Element) user;
+            userElement.addAttribute("password", newPassword);
+
+            // Write the updated file
+            XMLFileUtils.createFile(fileContext, XMLFileUtils.USERS_FILE_NAME, document);
+
+            responseStatus = StatusCode.SUCCESS;
+            responseString = "code_success_password_reset";
+          } else {
+            // Handle incorrect old password
+            responseStatus = StatusCode.ERROR;
+            responseString = "code_failure_password_reset_invalid_password";
+          }
+
+          break;
+        }
+      }
+
+      // Set a warning status if the requested account (email) was not found
+      if (responseStatus == null) {
+        responseStatus = StatusCode.ERROR;
+        responseString = "code_warning_password_reset_account_not_found";
+      }
+    } catch (Exception e) {
+      // Handle file exceptions
+      responseStatus = StatusCode.FAILURE;
+      responseString = "code_failure_password_reset_file_parse";
+    }
+
+    Log.d("MileageApp.auth", String.format("updateAuthUserPassword (%s): %s", email, responseString));
+
+    return new Response(responseStatus, responseString);
   }
 
 
@@ -222,7 +344,7 @@ public abstract class AuthUtils {
    * @param newPassword User's new password
    * @return Operation response with status and message
    */
-  public static Response UpdateAuthUserPassword(String email, String newPassword) {
+  public static Response setAuthUserPassword(String email, String newPassword) {
     if (fileContext == null) return invalidFileContext;
 
     Document document;
@@ -254,19 +376,16 @@ public abstract class AuthUtils {
 
       // Set a warning status if the requested account (email) was not found
       if (responseStatus == null) {
-        responseStatus = StatusCode.WARNING;
+        responseStatus = StatusCode.ERROR;
         responseString = "code_warning_password_reset_account_not_found";
       }
-
-      String resetStatus = responseStatus == StatusCode.SUCCESS ? "was successful" : "did not complete (no account)";
-      Log.d("MileageApp.auth", String.format("Password reset for email '%s' %s", email, resetStatus));
     } catch (Exception e) {
-      // Return a failure status (no match) if the file parsing fails or throws an exception
+      // Handle file exceptions
       responseStatus = StatusCode.FAILURE;
       responseString = "code_failure_password_reset_file_parse";
-
-      Log.d("MileageApp.auth", String.format("Password reset for email '%s' failed with a file parsing error", email));
     }
+
+    Log.d("MileageApp.auth", String.format("setAuthUserPassword (%s): %s", email, responseString));
 
     return new Response(responseStatus, responseString);
   }
@@ -300,15 +419,13 @@ public abstract class AuthUtils {
 
       responseStatus = StatusCode.SUCCESS;
       responseString = "code_success_auth_file_reset";
-
-      Log.d("MileageApp.auth", "Authentication file reset");
     } catch (Exception e) {
-      // Return a failure status (no match) if the file parsing fails or throws an exception
+      // Handle file exceptions
       responseStatus = StatusCode.FAILURE;
       responseString = "code_failure_auth_file_reset_file_parse";
-
-      Log.d("MileageApp.auth", "Authentication file reset failed with a file parsing error");
     }
+
+    Log.d("MileageApp.auth", String.format("resetAuthFile: %s", responseString));
 
     return new Response(responseStatus, responseString);
   }
