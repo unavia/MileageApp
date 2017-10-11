@@ -34,7 +34,7 @@ public class HomeActivity extends AppCompatActivity {
   private void initView() {
     // Toolbar
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-    toolbar.setTitle("Home");
+    toolbar.setTitle(getString(R.string.title_activity_home));
 
     setSupportActionBar(toolbar);
 
